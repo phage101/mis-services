@@ -28,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Profile Management
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
     // User & Role Management
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::resource('roles', \App\Http\Controllers\RoleController::class);

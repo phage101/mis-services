@@ -17,9 +17,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy('id', 'DESC')->get();
-        return view('users.index', compact('users'))
-            ->with('i', 0);
+        $users = User::orderBy('id', 'DESC')->paginate(10);
+        $kpis = [
+            'total' => User::count(),
+            'admins' => User::role('Admin')->count(),
+            'users' => User::role('User')->count(),
+        ];
+
+        return view('users.index', compact('users', 'kpis'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**

@@ -21,7 +21,15 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::with(['organizer'])->orderBy('start_date', 'desc')->paginate(10);
-        return view('events.index', compact('events'))->with('i', (request()->input('page', 1) - 1) * 10);
+
+        $kpis = [
+            'total' => Event::count(),
+            'upcoming' => Event::where('status', 'upcoming')->count(),
+            'ongoing' => Event::where('status', 'ongoing')->count(),
+            'completed' => Event::where('status', 'completed')->count(),
+        ];
+
+        return view('events.index', compact('events', 'kpis'))->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**

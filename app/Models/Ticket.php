@@ -20,6 +20,7 @@ class Ticket extends Model
         'channel',
         'remarks',
         'status',
+        'uuid',
     ];
 
     protected $casts = [
@@ -85,6 +86,12 @@ class Ticket extends Model
     {
         parent::boot();
 
+        static::creating(function ($ticket) {
+            if (empty($ticket->uuid)) {
+                $ticket->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+
         static::updating(function ($ticket) {
             $original = $ticket->getOriginal('status');
             $new = $ticket->status;
@@ -99,5 +106,10 @@ class Ticket extends Model
                 $ticket->datetime_ended = now();
             }
         });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

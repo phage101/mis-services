@@ -17,9 +17,13 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id', 'DESC')->get();
-        return view('roles.index', compact('roles'))
-            ->with('i', 0);
+        $roles = Role::orderBy('id', 'DESC')->paginate(10);
+        $kpis = [
+            'total' => Role::count(),
+        ];
+
+        return view('roles.index', compact('roles', 'kpis'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**

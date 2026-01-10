@@ -8,6 +8,53 @@
 
 @section('content')
     <div class="row">
+        <!-- Column -->
+        <div class="col-md-4">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-danger text-white"><i
+                                    class="ti-user"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Total Users</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['total'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-4">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-info text-white"><i
+                                    class="ti-shield"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Admins</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['admins'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-4">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-success text-white"><i
+                                    class="ti-user"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Regular Users</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['users'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -62,6 +109,11 @@
                         </table>
                     </div>
                 </div>
+                <div class="card-footer bg-white border-top-0">
+                    <div class="d-flex justify-content-center">
+                        {!! $users->links() !!}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,7 +123,10 @@
     <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function () {
-            $('#users-table').DataTable();
+            $('#users-table').DataTable({
+                "paging": false,
+                "info": false
+            });
         });
     </script>
 @endpush

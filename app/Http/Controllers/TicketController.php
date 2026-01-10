@@ -23,14 +23,27 @@ class TicketController extends Controller
     {
         $user = Auth::user();
 
-        // Admins see all tickets, users see only their own
-        if ($user->hasRole('Admin')) {
-            $tickets = Ticket::with('requestor')->orderBy('created_at', 'desc')->paginate(10);
-        } else {
-            $tickets = Ticket::where('requestor_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
+        $query = Ticket::query();
+        if (!$user->hasRole('Admin')) {
+            $query->where('requestor_id', $user->id);
         }
 
-        return view('tickets.index', compact('tickets'))
+        $tickets = $query->with('requestor')->orderBy('created_at', 'desc')->paginate(10);
+
+        // Fetch KPIs based on user visibility
+        $kpiQuery = Ticket::query();
+        if (!$user->hasRole('Admin')) {
+            $kpiQuery->where('requestor_id', $user->id);
+        }
+
+        $kpis = [
+            'total' => (clone $kpiQuery)->count(),
+            'pending' => (clone $kpiQuery)->where('status', 'pending')->count(),
+            'ongoing' => (clone $kpiQuery)->where('status', 'on-going')->count(),
+            'completed' => (clone $kpiQuery)->where('status', 'completed')->count(),
+        ];
+
+        return view('tickets.index', compact('tickets', 'kpis'))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 

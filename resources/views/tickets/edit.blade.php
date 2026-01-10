@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Edit Ticket #{{ $ticket->id }}</h4>
-                        <a class="btn btn-secondary" href="{{ route('tickets.show', $ticket->id) }}"><i
+                        <a class="btn btn-secondary" href="{{ route('tickets.show', $ticket) }}"><i
                                 class="mdi mdi-arrow-left"></i> Back to Details</a>
                     </div>
 
@@ -34,7 +34,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('tickets.update', $ticket->id) }}" method="POST">
+                    <form action="{{ route('tickets.update', $ticket) }}" method="POST">
                         @csrf
                         @method('PATCH')
 

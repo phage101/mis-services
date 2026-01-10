@@ -18,14 +18,22 @@ class MeetingController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $query = Meeting::with(['requestor', 'platform', 'host', 'slots'])->orderBy('created_at', 'desc');
+        $query = Meeting::query();
 
         if (!$user->hasRole('Admin')) {
             $query->where('requestor_id', $user->id);
         }
 
-        $meetings = $query->paginate(10);
-        return view('meetings.index', compact('meetings'))->with('i', (request()->input('page', 1) - 1) * 10);
+        $meetings = (clone $query)->with(['requestor', 'platform', 'host', 'slots'])->orderBy('created_at', 'desc')->paginate(10);
+
+        $kpis = [
+            'total' => (clone $query)->count(),
+            'pending' => (clone $query)->where('status', Meeting::STATUS_PENDING)->count(),
+            'scheduled' => (clone $query)->where('status', Meeting::STATUS_SCHEDULED)->count(),
+            'conflict' => (clone $query)->where('status', Meeting::STATUS_CONFLICT)->count(),
+        ];
+
+        return view('meetings.index', compact('meetings', 'kpis'))->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -134,7 +142,7 @@ class MeetingController extends Controller
         $isApproved = ($request->status === Meeting::STATUS_SCHEDULED);
         $meeting->slots()->update(['is_approved' => $isApproved]);
 
-        return redirect()->route('meetings.show', $meeting->id)
+        return redirect()->route('meetings.show', $meeting)
             ->with('success', 'Meeting updated successfully.');
     }
 
@@ -159,6 +167,11 @@ class MeetingController extends Controller
     {
         $hostId = $request->host_id;
         $excludeMeetingId = $request->meeting_id;
+
+        // Handle UUID if passed for exclusion
+        if ($excludeMeetingId && !is_numeric($excludeMeetingId)) {
+            $excludeMeetingId = Meeting::where('uuid', $excludeMeetingId)->value('id');
+        }
 
         if ($request->slot_id) {
             $slot = MeetingSlot::find($request->slot_id);
@@ -195,7 +208,7 @@ class MeetingController extends Controller
                 'title' => $slot->meeting->topic . ($slot->meeting->host ? ' (' . $slot->meeting->host->name . ')' : ''),
                 'start' => $slot->meeting_date->format('Y-m-d') . 'T' . $slot->start_time,
                 'end' => $slot->meeting_date->format('Y-m-d') . 'T' . $slot->end_time,
-                'url' => route('meetings.show', $slot->meeting_id),
+                'url' => route('meetings.show', $slot->meeting->uuid),
                 'backgroundColor' => '#2962ff',
                 'borderColor' => '#2962ff',
                 'textColor' => '#fff',

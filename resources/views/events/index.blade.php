@@ -2,13 +2,79 @@
 
 @section('title', 'Events Management')
 
+@push('styles')
+    <link href="{{ asset('assets/extra-libs/DataTables/datatables.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
+    <div class="row">
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-info text-white"><i
+                                    class="ti-layers"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Total Events</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['total'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-secondary text-white"><i
+                                    class="ti-timer"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Upcoming</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['upcoming'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-primary text-white"><i
+                                    class="ti-reload"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Ongoing</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['ongoing'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-success text-white"><i
+                                    class="ti-check"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Completed</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['completed'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="card-title">Events List</h4>
+                        <h4 class="card-title mb-0">Events List</h4>
                         <a href="{{ route('events.create') }}" class="btn btn-info">
                             <i class="mdi mdi-plus"></i> Create New Event
                         </a>
@@ -21,16 +87,16 @@
                     @endif
 
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table id="events-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Event Title</th>
                                     <th>Type</th>
                                     <th>Venue</th>
                                     <th>Schedule</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
+                                    <th class="text-right" style="width:1%; white-space:nowrap;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,17 +137,23 @@
                                             <span class="badge {{ $statusClass }}">{{ ucfirst($event->status) }}</span>
                                         </td>
 
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-outline-info"
-                                                    title="View">
-                                                    <i class="mdi mdi-eye"></i>
-                                                </a>
-                                                <a href="{{ route('events.edit', $event) }}"
-                                                    class="btn btn-sm btn-outline-warning" title="Edit">
-                                                    <i class="mdi mdi-pencil"></i>
-                                                </a>
-                                            </div>
+                                        <td class="text-right" style="white-space:nowrap;">
+                                            <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-info"
+                                                title="View">
+                                                <i class="mdi mdi-eye"></i>
+                                            </a>
+                                            <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-warning"
+                                                title="Edit">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('events.destroy', $event) }}" method="POST"
+                                                style="display:inline" onsubmit="return confirm('Are you sure?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
@@ -92,11 +164,23 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        {{ $events->links() }}
+                    <div class="mt-3">
+                        {!! $events->links() !!}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#events-table').DataTable({
+                "paging": false,
+                "info": false
+            });
+        });
+    </script>
+@endpush

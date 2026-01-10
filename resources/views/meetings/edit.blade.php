@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <h4 class="card-title mb-4">Process Meeting #{{ $meeting->id }}</h4>
 
-                    <form action="{{ route('meetings.update', $meeting->id) }}" method="POST">
+                    <form action="{{ route('meetings.update', $meeting) }}" method="POST">
                         @csrf
                         @method('PATCH')
 
@@ -127,7 +127,7 @@
                         data: {
                             host_id: hostId,
                             slot_id: slotId,
-                            meeting_id: '{{ $meeting->id }}'
+                            meeting_id: '{{ $meeting->uuid }}'
                         },
                         success: function (data) {
                             if (data.conflict) {

@@ -8,6 +8,68 @@
 
 @section('content')
     <div class="row">
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-info text-white"><i
+                                    class="ti-ticket"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Total</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['total'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-secondary text-white"><i
+                                    class="ti-timer"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Pending</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['pending'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-primary text-white"><i
+                                    class="ti-reload"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">On-going</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['ongoing'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-success text-white"><i
+                                    class="ti-check"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Completed</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['completed'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -66,12 +128,12 @@
                                             <span class="badge {{ $statusBadge }}">{{ ucfirst($ticket->status) }}</span>
                                         </td>
                                         <td class="text-right" style="white-space:nowrap;">
-                                            <a class="btn btn-info btn-sm" href="{{ route('tickets.show', $ticket->id) }}"><i
+                                            <a class="btn btn-info btn-sm" href="{{ route('tickets.show', $ticket) }}"><i
                                                     class="mdi mdi-eye"></i></a>
                                             @if(Auth::user()->hasRole('Admin'))
-                                                <a class="btn btn-warning btn-sm" href="{{ route('tickets.edit', $ticket->id) }}"><i
+                                                <a class="btn btn-warning btn-sm" href="{{ route('tickets.edit', $ticket) }}"><i
                                                         class="mdi mdi-pencil"></i></a>
-                                                <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST"
+                                                <form action="{{ route('tickets.destroy', $ticket) }}" method="POST"
                                                     style="display:inline" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')

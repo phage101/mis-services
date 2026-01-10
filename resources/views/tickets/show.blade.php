@@ -26,7 +26,8 @@
                     <div class="row mb-3">
                         <div class="col-md-4"><strong>Type & Category:</strong></div>
                         <div class="col-md-8">{{ $ticket->requestType->name ?? 'N/A' }} /
-                            {{ $ticket->category->name ?? 'N/A' }}</div>
+                            {{ $ticket->category->name ?? 'N/A' }}
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -112,7 +113,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Add Response</h4>
-                        <form action="{{ route('tickets.response', $ticket->id) }}" method="POST">
+                        <form action="{{ route('tickets.response', $ticket) }}" method="POST">
                             @csrf
                             <div class="form-group mb-3">
                                 <label for="status">Change Status</label>
@@ -136,7 +137,7 @@
                 <div class="card mt-4">
                     <div class="card-body">
                         <h4 class="card-title">Admin Quick Edit</h4>
-                        <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-warning btn-block">Full Edit</a>
+                        <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-warning btn-block">Full Edit</a>
                     </div>
                 </div>
             </div>

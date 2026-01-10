@@ -101,10 +101,10 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Admin Actions</h4>
-                        <a href="{{ route('meetings.edit', $meeting->id) }}" class="btn btn-warning btn-block"><i
+                        <a href="{{ route('meetings.edit', $meeting) }}" class="btn btn-warning btn-block"><i
                                 class="mdi mdi-pencil"></i> Process Request</a>
                         <hr>
-                        <form action="{{ route('meetings.destroy', $meeting->id) }}" method="POST"
+                        <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
                             onsubmit="return confirm('Delete this request?')">
                             @csrf
                             @method('DELETE')

@@ -4,6 +4,7 @@
 
 @push('styles')
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <link href="{{ asset('assets/extra-libs/DataTables/datatables.min.css') }}" rel="stylesheet">
     <style>
         .fc-event {
             cursor: pointer;
@@ -20,6 +21,68 @@
 @endpush
 
 @section('content')
+    <div class="row">
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-info text-white"><i
+                                    class="ti-calendar"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Total</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['total'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-secondary text-white"><i
+                                    class="ti-timer"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Pending</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['pending'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-success text-white"><i
+                                    class="ti-check"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Scheduled</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['scheduled'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <div class="col-md-3">
+            <div class="card card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="m-r-10"><span class="btn btn-circle btn-lg bg-danger text-white"><i
+                                    class="ti-alert"></i></span></div>
+                        <div>
+                            <h6 class="card-subtitle text-muted">Conflicts</h6>
+                            <h3 class="font-medium mb-0">{{ $kpis['conflict'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -55,7 +118,7 @@
                         <div class="tab-pane fade show active" id="pills-list" role="tabpanel"
                             aria-labelledby="pills-list-tab">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered no-wrap">
+                                <table id="meetings-table" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -63,7 +126,7 @@
                                             <th>Requestor</th>
                                             <th>Topic</th>
                                             <th>Status</th>
-                                            <th class="text-right">Action</th>
+                                            <th class="text-right" style="width:1%; white-space:nowrap;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,16 +148,16 @@
                                                     <span
                                                         class="badge {{ $statusBadge }}">{{ ucfirst($meeting->status) }}</span>
                                                 </td>
-                                                <td class="text-right">
+                                                <td class="text-right" style="white-space:nowrap;">
                                                     <a class="btn btn-info btn-sm"
-                                                        href="{{ route('meetings.show', $meeting->id) }}"><i
+                                                        href="{{ route('meetings.show', $meeting) }}"><i
                                                             class="mdi mdi-eye"></i></a>
                                                     @if(Auth::user()->hasRole('Admin'))
                                                         <a class="btn btn-warning btn-sm"
-                                                            href="{{ route('meetings.edit', $meeting->id) }}"><i
+                                                            href="{{ route('meetings.edit', $meeting) }}"><i
                                                                 class="mdi mdi-pencil"></i></a>
                                                     @endif
-                                                    <form action="{{ route('meetings.destroy', $meeting->id) }}" method="POST"
+                                                    <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
                                                         style="display:inline" onsubmit="return confirm('Are you sure?')">
                                                         @csrf
                                                         @method('DELETE')
@@ -126,6 +189,7 @@
 
 @push('scripts')
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             var calendarEl = document.getElementById('calendar');
@@ -152,6 +216,11 @@
                 } else {
                     calendar.updateSize();
                 }
+            });
+
+            $('#meetings-table').DataTable({
+                "paging": false,
+                "info": false
             });
         });
     </script>

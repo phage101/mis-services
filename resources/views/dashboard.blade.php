@@ -4,84 +4,167 @@
 
 @section('content')
     <div class="row">
-        <!-- Card 1 -->
+        <!-- Card 1: Total Users -->
         <div class="col-md-6 col-lg-3">
             <div class="card card-hover">
                 <div class="box bg-cyan text-center">
                     <h1 class="font-light text-white"><i class="mdi mdi-account-multiple"></i></h1>
                     <h6 class="text-white">Total Users</h6>
-                    <h3 class="text-white">1,248</h3>
+                    <h3 class="text-white">{{ number_format($kpis['users']) }}</h3>
                 </div>
             </div>
         </div>
-        <!-- Card 2 -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-hover">
-                <div class="box bg-success text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-account-check"></i></h1>
-                    <h6 class="text-white">Active Sessions</h6>
-                    <h3 class="text-white">86</h3>
-                </div>
-            </div>
-        </div>
-        <!-- Card 3 -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-hover">
-                <div class="box bg-warning text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-security"></i></h1>
-                    <h6 class="text-white">My Role</h6>
-                    <h3 class="text-white" style="text-transform: capitalize;">{{ Auth::user()->getRoleNames()->first() }}
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <!-- Card 4 -->
+        <!-- Card 2: Pending Tickets -->
         <div class="col-md-6 col-lg-3">
             <div class="card card-hover">
                 <div class="box bg-danger text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-bell-ring"></i></h1>
-                    <h6 class="text-white">Notifications</h6>
-                    <h3 class="text-white">12</h3>
+                    <h1 class="font-light text-white"><i class="mdi mdi-ticket"></i></h1>
+                    <h6 class="text-white">Pending Tickets</h6>
+                    <h3 class="text-white">{{ number_format($kpis['tickets']) }}</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3: Scheduled Meetings -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover">
+                <div class="box bg-success text-center">
+                    <h1 class="font-light text-white"><i class="mdi mdi-calendar-check"></i></h1>
+                    <h6 class="text-white">Scheduled Meetings</h6>
+                    <h3 class="text-white">{{ number_format($kpis['meetings']) }}</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Card 4: Upcoming Events -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover">
+                <div class="box bg-warning text-center">
+                    <h1 class="font-light text-white"><i class="mdi mdi-layers"></i></h1>
+                    <h6 class="text-white">Upcoming Events</h6>
+                    <h3 class="text-white">{{ number_format($kpis['events']) }}</h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Activity -->
+    <!-- Recent Activity Section -->
     <div class="row">
-        <div class="col-12">
+        <!-- Recent Tickets -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Recent Activity</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Recent Tickets</h4>
+                        <a href="{{ route('tickets.index') }}" class="btn btn-sm btn-link">View All</a>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Action</th>
+                                    <th>Topic</th>
+                                    <th>Requestor</th>
                                     <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentTickets as $ticket)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('tickets.show', $ticket) }}"
+                                                class="font-medium text-dark">{{ $ticket->topic }}</a>
+                                        </td>
+                                        <td>{{ $ticket->requestor->name ?? 'N/A' }}</td>
+                                        <td class="text-muted"><small>{{ $ticket->created_at->diffForHumans() }}</small></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">No recent tickets</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Meetings -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Upcoming Meetings</h4>
+                        <a href="{{ route('meetings.index') }}" class="btn btn-sm btn-link">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Meeting</th>
+                                    <th>Host</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($upcomingMeetings as $meeting)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('meetings.show', $meeting) }}"
+                                                class="font-medium text-dark">{{ $meeting->topic }}</a>
+                                        </td>
+                                        <td>{{ $meeting->host->name ?? 'N/A' }}</td>
+                                        <td>
+                                            <span class="badge badge-success">Scheduled</span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">No upcoming meetings</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest Registered Participants -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Latest Registered Participants</h4>
+                        <a href="{{ route('events.index') }}" class="btn btn-sm btn-link">Manage Events</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
                                 <tr>
-                                    <td>John Doe</td>
-                                    <td>Login Success</td>
-                                    <td>Just now</td>
-                                    <td><span class="badge badge-success">Completed</span></td>
+                                    <th>Participant Name</th>
+                                    <th>Event</th>
+                                    <th>Organization</th>
+                                    <th>Registration Date</th>
                                 </tr>
-                                <tr>
-                                    <td>Jane Smith</td>
-                                    <td>Update Profile</td>
-                                    <td>5 mins ago</td>
-                                    <td><span class="badge badge-success">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Admin User</td>
-                                    <td>System Backup</td>
-                                    <td>1 hour ago</td>
-                                    <td><span class="badge badge-info">Processing</span></td>
-                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($latestParticipants as $participant)
+                                    <tr>
+                                        <td class="font-medium">{{ $participant->name }}</td>
+                                        <td>
+                                            <a href="{{ route('events.show', $participant->event) }}"
+                                                class="text-dark">{{ $participant->event->title ?? 'N/A' }}</a>
+                                        </td>
+                                        <td>{{ $participant->organization ?? 'N/A' }}</td>
+                                        <td class="text-muted">
+                                            <small>{{ $participant->created_at->format('M d, Y h:i A') }}</small></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No participants registered yet</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

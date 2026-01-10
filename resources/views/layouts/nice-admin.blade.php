@@ -64,14 +64,7 @@
 
                 <div class="navbar-collapse collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav float-left mr-auto">
-                        <li class="nav-item search-box">
-                            <a class="nav-link waves-effect waves-dark" href="javascript:void(0)">
-                                <div class="d-flex align-items-center">
-                                    <i class="mdi mdi-magnify font-20 mr-1"></i>
-                                    <div class="ml-1 d-none d-sm-block"><span>Search</span></div>
-                                </div>
-                            </a>
-                        </li>
+
                     </ul>
                     <ul class="navbar-nav float-right">
                         <li class="nav-item dropdown">
@@ -81,7 +74,8 @@
                                     <i class="mdi mdi-chevron-down"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i>
+                                <a class="dropdown-item" href="{{ route('profile.show') }}"><i
+                                        class="ti-user m-r-5 m-l-5"></i>
                                     My Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('logout') }}" method="POST">

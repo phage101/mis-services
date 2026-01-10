@@ -33,6 +33,18 @@
 @endpush
 
 @section('content')
+    <style>
+        .pulse-small {
+            display: inline-block;
+            animation: pulse-small 2s infinite;
+        }
+        @keyframes pulse-small {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -395,7 +407,7 @@
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h5 class="card-title mb-0">Attendance Tracker</h5>
                                                 <div class="btn-group">
-                                                    <a href="{{ route('events.print-attendance', $event) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <a href="{{ route('events.print-attendance', $event) }}" target="_blank" class="btn btn-sm btn-primary">
                                                         <i class="mdi mdi-printer"></i> Print Sheet
                                                     </a>
                                                     <button class="btn btn-sm btn-info" onclick="location.reload()">
@@ -424,14 +436,14 @@
                                                 @foreach($event->dates as $date)
                                                     <div class="tab-pane {{ $loop->first ? 'active' : '' }}" id="attendance-day-{{ $date->id }}" role="tabpanel">
                                                         <div class="table-responsive">
-                                                            <table class="table table-hover table-bordered datatable-attendance" id="attendance-table-{{ $date->id }}">
+                                                            <table class="table table-hover table-striped table-bordered datatable-attendance no-wrap" id="attendance-table-{{ $date->id }}">
                                                                 <thead class="bg-light">
                                                                     <tr>
-                                                                        <th>Participant</th>
-                                                                        <th>Organization</th>
-                                                                        <th>Status</th>
-                                                                        <th>Time</th>
-                                                                        <th>Action</th>
+                                                                        <th class="border-top-0">Participant</th>
+                                                                        <th class="border-top-0">Organization</th>
+                                                                        <th class="border-top-0">Status</th>
+                                                                        <th class="border-top-0">Time</th>
+                                                                        <th class="border-top-0 text-center">Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -452,15 +464,15 @@
                                                                                 @endif
                                                                             </td>
                                                                             <td class="time-cell small">{{ $att ? $att->scanned_at->format('h:i A') : '-' }}</td>
-                                                                            <td>
+                                                                            <td class="text-center">
                                                                                 @if(!$att)
-                                                                                    <button class="btn btn-xs btn-outline-info mark-manual" 
+                                                                                    <button class="btn btn-xs btn-info shadow-sm mark-manual" 
                                                                                         data-participant-id="{{ $participant->uuid }}"
                                                                                         data-date-id="{{ $date->id }}">
-                                                                                        Mark
+                                                                                        <i class="mdi mdi-check"></i> Mark
                                                                                     </button>
                                                                                 @else
-                                                                                    <span class="text-success"><i class="mdi mdi-check-circle"></i></span>
+                                                                                    <span class="text-success pulse-small"><i class="mdi mdi-check-circle mdi-18px"></i></span>
                                                                                 @endif
                                                                             </td>
                                                                         </tr>
@@ -612,7 +624,7 @@
                 if (row.length) {
                     row.find('.status-cell').html('<span class="badge badge-success animated pulse infinite">Present</span>');
                     row.find('.time-cell').text(timeStr || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-                    row.find('td:last-child').html('<span class="text-success"><i class="mdi mdi-check-circle"></i></span>');
+                    row.find('td:last-child').html('<span class="text-success pulse-small"><i class="mdi mdi-check-circle mdi-18px"></i></span>');
                     row.addClass('table-success animated flash');
                     setTimeout(() => {
                         row.removeClass('table-success animated flash');
