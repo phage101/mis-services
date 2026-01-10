@@ -131,6 +131,13 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                href="{{ route('events.index') }}" aria-expanded="false">
+                                <i class="mdi mdi-calendar-check"></i>
+                                <span class="hide-menu">Events</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ route('roles.index') }}" aria-expanded="false">
                                 <i class="mdi mdi-security"></i>
                                 <span class="hide-menu">Roles</span>

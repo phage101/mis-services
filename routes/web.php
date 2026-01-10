@@ -41,4 +41,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('meetings', \App\Http\Controllers\MeetingController::class);
     Route::get('api/meetings/check-conflict', [\App\Http\Controllers\MeetingController::class, 'checkConflict'])->name('api.meetings.conflict');
     Route::get('api/meetings/calendar-events', [\App\Http\Controllers\MeetingController::class, 'calendarEvents'])->name('api.meetings.events');
+
+    // Event Management
+    Route::get('events/reports', [\App\Http\Controllers\EventController::class, 'reports'])->name('events.reports');
+    Route::resource('events', \App\Http\Controllers\EventController::class);
+    Route::post('events/{event}/attendance', [\App\Http\Controllers\EventController::class, 'updateAttendance'])->name('events.attendance.update');
+    Route::get('events/{event}/mark-attendance/{participant_uuid}', [\App\Http\Controllers\EventController::class, 'markAttendance'])->name('events.attendance.mark');
+    Route::get('events/{event}/print-attendance', [\App\Http\Controllers\EventController::class, 'printAttendance'])->name('events.print-attendance');
 });
+
+// Public Event Registration
+Route::get('events/{event}/register', [\App\Http\Controllers\EventController::class, 'registrationPage'])->name('events.register');
+Route::post('events/{event}/register', [\App\Http\Controllers\EventController::class, 'register'])->name('events.register.submit');
