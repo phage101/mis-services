@@ -17,6 +17,7 @@ class MeetingController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Meeting::class);
         $user = Auth::user();
         $query = Meeting::query();
 
@@ -41,6 +42,7 @@ class MeetingController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Meeting::class);
         $users = [];
         if (Auth::user()->hasRole('Admin')) {
             $users = User::orderBy('name')->get();
@@ -53,6 +55,7 @@ class MeetingController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Meeting::class);
         $request->validate([
             'topic' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -93,10 +96,7 @@ class MeetingController extends Controller
      */
     public function show(Meeting $meeting)
     {
-        $user = Auth::user();
-        if (!$user->hasRole('Admin') && $meeting->requestor_id !== $user->id) {
-            abort(403);
-        }
+        $this->authorize('view', $meeting);
 
         $meeting->load(['requestor', 'platform', 'host', 'slots']);
         return view('meetings.show', compact('meeting'));
@@ -107,9 +107,7 @@ class MeetingController extends Controller
      */
     public function edit(Meeting $meeting)
     {
-        if (!Auth::user()->hasRole('Admin')) {
-            abort(403);
-        }
+        $this->authorize('update', $meeting);
 
         $meeting->load(['requestor', 'slots']);
         $platforms = Platform::orderBy('name')->get();
@@ -124,9 +122,7 @@ class MeetingController extends Controller
      */
     public function update(Request $request, Meeting $meeting)
     {
-        if (!Auth::user()->hasRole('Admin')) {
-            abort(403);
-        }
+        $this->authorize('update', $meeting);
 
         $request->validate([
             'status' => 'required|in:pending,scheduled,conflict,cancelled',
@@ -151,9 +147,7 @@ class MeetingController extends Controller
      */
     public function destroy(Meeting $meeting)
     {
-        if (!Auth::user()->hasRole('Admin') && $meeting->requestor_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorize('delete', $meeting);
 
         $meeting->delete();
         return redirect()->route('meetings.index')

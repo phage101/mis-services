@@ -102,13 +102,15 @@
                                 <span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="{{ route('users.index') }}" aria-expanded="false">
-                                <i class="mdi mdi-account-multiple"></i>
-                                <span class="hide-menu">Users</span>
-                            </a>
-                        </li>
+                        @can('users.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('users.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-account-multiple"></i>
+                                    <span class="hide-menu">Users</span>
+                                </a>
+                            </li>
+                        @endcan
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ route('tickets.index') }}" aria-expanded="false">
@@ -130,13 +132,15 @@
                                 <span class="hide-menu">Events</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="{{ route('roles.index') }}" aria-expanded="false">
-                                <i class="mdi mdi-security"></i>
-                                <span class="hide-menu">Roles</span>
-                            </a>
-                        </li>
+                        @can('roles.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('roles.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-security"></i>
+                                    <span class="hide-menu">Roles</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </nav>
             </div>

@@ -75,8 +75,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Ticket List</h4>
-                        <a class="btn btn-info" href="{{ route('tickets.create') }}"><i class="mdi mdi-plus"></i> Create New
-                            Ticket</a>
+                        @can('create', App\Models\Ticket::class)
+                            <a class="btn btn-info" href="{{ route('tickets.create') }}"><i class="mdi mdi-plus"></i> Create New
+                                Ticket</a>
+                        @endcan
                     </div>
 
                     @if ($message = Session::get('success'))
@@ -130,9 +132,11 @@
                                         <td class="text-right" style="white-space:nowrap;">
                                             <a class="btn btn-info btn-sm" href="{{ route('tickets.show', $ticket) }}"><i
                                                     class="mdi mdi-eye"></i></a>
-                                            @if(Auth::user()->hasRole('Admin'))
+                                            @can('update', $ticket)
                                                 <a class="btn btn-warning btn-sm" href="{{ route('tickets.edit', $ticket) }}"><i
                                                         class="mdi mdi-pencil"></i></a>
+                                            @endcan
+                                            @can('delete', $ticket)
                                                 <form action="{{ route('tickets.destroy', $ticket) }}" method="POST"
                                                     style="display:inline" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
@@ -140,7 +144,7 @@
                                                     <button type="submit" class="btn btn-danger btn-sm"><i
                                                             class="mdi mdi-delete"></i></button>
                                                 </form>
-                                            @endif
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

@@ -108,8 +108,8 @@
             </div>
         </div>
 
-        @if(Auth::user()->hasRole('Admin'))
-            <div class="col-md-4">
+        <div class="col-md-4">
+            @can('tickets.respond')
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Add Response</h4>
@@ -133,14 +133,16 @@
                         </form>
                     </div>
                 </div>
+            @endcan
 
+            @can('update', $ticket)
                 <div class="card mt-4">
                     <div class="card-body">
                         <h4 class="card-title">Admin Quick Edit</h4>
                         <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-warning btn-block">Full Edit</a>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endcan
+        </div>
     </div>
 @endsection

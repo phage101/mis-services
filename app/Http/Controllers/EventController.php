@@ -20,6 +20,7 @@ class EventController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Event::class);
         $events = Event::with(['organizer'])->orderBy('start_date', 'desc')->paginate(10);
 
         $kpis = [
@@ -37,6 +38,7 @@ class EventController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Event::class);
         return view('events.create');
     }
 
@@ -45,6 +47,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Event::class);
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -163,6 +166,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        $this->authorize('update', $event);
         $event->load(['formFields', 'participants', 'dates']);
         return view('events.edit', compact('event'));
     }
@@ -172,6 +176,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        $this->authorize('update', $event);
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -256,6 +261,7 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
+        $this->authorize('delete', $event);
         $event->delete();
         return redirect()->route('events.index')
             ->with('success', 'Event deleted successfully.');
@@ -377,6 +383,7 @@ class EventController extends Controller
      */
     public function markAttendance(Request $request, Event $event, $participantUuid)
     {
+        $this->authorize('manageAttendance', $event);
         $participant = $event->participants()->where('uuid', $participantUuid)->firstOrFail();
 
         // Find the date for which we are marking attendance

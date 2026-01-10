@@ -75,9 +75,11 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Events List</h4>
-                        <a href="{{ route('events.create') }}" class="btn btn-info">
-                            <i class="mdi mdi-plus"></i> Create New Event
-                        </a>
+                        @can('create', App\Models\Event::class)
+                            <a href="{{ route('events.create') }}" class="btn btn-info">
+                                <i class="mdi mdi-plus"></i> Create New Event
+                            </a>
+                        @endcan
                     </div>
 
                     @if(session('success'))
@@ -142,18 +144,22 @@
                                                 title="View">
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
-                                            <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-warning"
-                                                title="Edit">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </a>
-                                            <form action="{{ route('events.destroy', $event) }}" method="POST"
-                                                style="display:inline" onsubmit="return confirm('Are you sure?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                                    <i class="mdi mdi-delete"></i>
-                                                </button>
-                                            </form>
+                                            @can('update', $event)
+                                                <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-warning"
+                                                    title="Edit">
+                                                    <i class="mdi mdi-pencil"></i>
+                                                </a>
+                                            @endcan
+                                            @can('delete', $event)
+                                                <form action="{{ route('events.destroy', $event) }}" method="POST"
+                                                    style="display:inline" onsubmit="return confirm('Are you sure?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @empty

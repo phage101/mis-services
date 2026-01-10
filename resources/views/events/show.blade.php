@@ -63,9 +63,11 @@
                             <a href="{{ route('events.index') }}" class="btn btn-secondary mr-2">
                                 <i class="mdi mdi-arrow-left"></i> Back
                             </a>
-                            <a href="{{ route('events.edit', $event) }}" class="btn btn-warning">
-                                <i class="mdi mdi-pencil"></i> Edit Event
-                            </a>
+                            @can('update', $event)
+                                <a href="{{ route('events.edit', $event) }}" class="btn btn-warning">
+                                    <i class="mdi mdi-pencil"></i> Edit Event
+                                </a>
+                            @endcan
                         </div>
                     </div>
 
@@ -163,30 +165,47 @@
                         </div>
                     </div>
 
+                    @php
+                        $canViewRegForm = Auth::user()->can('viewRegistrationForm', $event);
+                        $canViewParticipants = Auth::user()->can('viewParticipants', $event);
+                        $canManageAttendance = Auth::user()->can('manageAttendance', $event);
+                        
+                        // Determine which tab should be active by default
+                        $activeTab = $canViewRegForm ? 'registration-form' : ($canViewParticipants ? 'participants' : ($canManageAttendance ? 'checkin-station' : null));
+                    @endphp
+
+                    @if($activeTab)
                     <!-- Tabs Section -->
                     <ul class="nav nav-tabs customtab" role="tablist">
+                        @can('viewRegistrationForm', $event)
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#registration-form" role="tab">
+                            <a class="nav-link {{ $activeTab === 'registration-form' ? 'active' : '' }}" data-toggle="tab" href="#registration-form" role="tab">
                                 <span class="hidden-sm-up"><i class="mdi mdi-format-list-bulleted"></i></span>
                                 <span class="hidden-xs-down">Registration Form
                                     ({{ $event->formFields->count() }} Custom Fields)</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('viewParticipants', $event)
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#participants" role="tab">
+                            <a class="nav-link {{ $activeTab === 'participants' ? 'active' : '' }}" data-toggle="tab" href="#participants" role="tab">
                                 <span><i class="mdi mdi-account-group mr-1"></i> Registered List ({{ $event->participants->count() }})</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#checkin-station" role="tab" id="scanner-tab">
-                                <span><i class="mdi mdi-qrcode-scan mr-1"></i> Check-in Station & Attendance</span>
-                            </a>
-                        </li>
+                        @endcan
+                        @can('manageAttendance', $event)
+                            <li class="nav-item">
+                                <a class="nav-link {{ $activeTab === 'checkin-station' ? 'active' : '' }}" data-toggle="tab" href="#checkin-station" role="tab" id="scanner-tab">
+                                    <span><i class="mdi mdi-qrcode-scan mr-1"></i> Check-in Station & Attendance</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
 
                     <div class="tab-content mt-3">
                         <!-- Registration Form Preview Tab -->
-                        <div class="tab-pane active" id="registration-form" role="tabpanel">
+                        @can('viewRegistrationForm', $event)
+                        <div class="tab-pane {{ $activeTab === 'registration-form' ? 'active' : '' }}" id="registration-form" role="tabpanel">
                             <div class="card bg-light border p-4">
                                 <h5 class="font-weight-bold border-bottom pb-2 mb-3">Form Preview</h5>
 
@@ -291,11 +310,11 @@
                                         <i class="mdi mdi-eye"></i> View Actual Registration Page
                                     </a>
                                 </div>
-                            </div>
-                        </div>
+                            @endcan
 
                         <!-- Registered List Tab -->
-                        <div class="tab-pane" id="participants" role="tabpanel">
+                        @can('viewParticipants', $event)
+                        <div class="tab-pane {{ $activeTab === 'participants' ? 'active' : '' }}" id="participants" role="tabpanel">
                             <div class="sticky-filters shadow-sm p-3 rounded">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0 font-weight-bold text-dark"><i class="mdi mdi-filter-variant mr-1"></i>
@@ -350,10 +369,11 @@
                             <div class="participants-table-container">
                                 @include('events.partials.participants_table')
                             </div>
-                        </div>
+                        @endcan
 
                         <!-- Check-in Station Tab -->
-                        <div class="tab-pane" id="checkin-station" role="tabpanel">
+                        @can('manageAttendance', $event)
+                        <div class="tab-pane {{ $activeTab === 'checkin-station' ? 'active' : '' }}" id="checkin-station" role="tabpanel">
                             <div class="row">
                                 <!-- Left Column: Scanner & Controls -->
                                 <div class="col-lg-4">
@@ -487,8 +507,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endcan
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -21,6 +21,7 @@ class TicketController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Ticket::class);
         $user = Auth::user();
 
         $query = Ticket::query();
@@ -52,6 +53,7 @@ class TicketController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Ticket::class);
         $urgencies = Ticket::getUrgencies();
         $requestTypes = RequestType::with('categories')->orderBy('name')->get();
         $users = [];
@@ -108,12 +110,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        $user = Auth::user();
-
-        // Users can only view their own tickets
-        if (!$user->hasRole('Admin') && $ticket->requestor_id !== $user->id) {
-            abort(403);
-        }
+        $this->authorize('view', $ticket);
 
         $ticket->load(['requestor', 'responses.user', 'requestType', 'category']);
         $statuses = Ticket::getStatuses();
@@ -126,11 +123,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        $user = Auth::user();
-
-        if (!$user->hasRole('Admin')) {
-            abort(403);
-        }
+        $this->authorize('update', $ticket);
 
         $statuses = Ticket::getStatuses();
         $urgencies = Ticket::getUrgencies();
@@ -145,11 +138,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        $user = Auth::user();
-
-        if (!$user->hasRole('Admin')) {
-            abort(403);
-        }
+        $this->authorize('update', $ticket);
 
         $request->validate([
             'requestor_id' => 'required|exists:users,id',
@@ -184,11 +173,7 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        $user = Auth::user();
-
-        if (!$user->hasRole('Admin')) {
-            abort(403);
-        }
+        $this->authorize('delete', $ticket);
 
         $ticket->delete();
 
@@ -203,7 +188,8 @@ class TicketController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->hasRole('Admin')) {
+        // Check for specific ticket-respond permission
+        if (!$user->can('tickets.respond')) {
             abort(403);
         }
 

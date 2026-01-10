@@ -89,8 +89,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Meeting Scheduler</h4>
-                        <a class="btn btn-info" href="{{ route('meetings.create') }}"><i class="mdi mdi-plus"></i> Request
-                            Meeting</a>
+                        @can('create', App\Models\Meeting::class)
+                            <a class="btn btn-info" href="{{ route('meetings.create') }}"><i class="mdi mdi-plus"></i> Request
+                                Meeting</a>
+                        @endcan
                     </div>
 
                     @if ($message = Session::get('success'))
@@ -152,18 +154,20 @@
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('meetings.show', $meeting) }}"><i
                                                             class="mdi mdi-eye"></i></a>
-                                                    @if(Auth::user()->hasRole('Admin'))
+                                                    @can('update', $meeting)
                                                         <a class="btn btn-warning btn-sm"
                                                             href="{{ route('meetings.edit', $meeting) }}"><i
                                                                 class="mdi mdi-pencil"></i></a>
-                                                    @endif
-                                                    <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
-                                                        style="display:inline" onsubmit="return confirm('Are you sure?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm"><i
-                                                                class="mdi mdi-delete"></i></button>
-                                                    </form>
+                                                    @endcan
+                                                    @can('delete', $meeting)
+                                                        <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
+                                                            style="display:inline" onsubmit="return confirm('Are you sure?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm"><i
+                                                                    class="mdi mdi-delete"></i></button>
+                                                        </form>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

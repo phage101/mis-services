@@ -96,25 +96,29 @@
             </div>
         </div>
 
-        @if(Auth::user()->hasRole('Admin'))
+        @canany(['update', 'delete'], $meeting)
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Admin Actions</h4>
-                        <a href="{{ route('meetings.edit', $meeting) }}" class="btn btn-warning btn-block"><i
-                                class="mdi mdi-pencil"></i> Process Request</a>
+                        @can('update', $meeting)
+                            <a href="{{ route('meetings.edit', $meeting) }}" class="btn btn-warning btn-block"><i
+                                    class="mdi mdi-pencil"></i> Process Request</a>
+                        @endcan
                         <hr>
-                        <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
-                            onsubmit="return confirm('Delete this request?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-block"><i class="mdi mdi-delete"></i> Delete
-                                Request</button>
-                        </form>
+                        @can('delete', $meeting)
+                            <form action="{{ route('meetings.destroy', $meeting) }}" method="POST"
+                                onsubmit="return confirm('Delete this request?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-block"><i class="mdi mdi-delete"></i> Delete
+                                    Request</button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>
-        @endif
+        @endcanany
     </div>
 @endsection
 
