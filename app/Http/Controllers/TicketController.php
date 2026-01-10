@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Models\RequestType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketCreated;
+use App\Mail\TicketUpdated;
 
 class TicketController extends Controller
 {
@@ -29,7 +32,7 @@ class TicketController extends Controller
             $query->where('requestor_id', $user->id);
         }
 
-        $tickets = $query->with('requestor')->orderBy('created_at', 'desc')->paginate(10);
+        $tickets = $query->with('requestor')->orderBy('created_at', 'desc')->get();
 
         // Fetch KPIs based on user visibility
         $kpiQuery = Ticket::query();
@@ -44,8 +47,7 @@ class TicketController extends Controller
             'completed' => (clone $kpiQuery)->where('status', 'completed')->count(),
         ];
 
-        return view('tickets.index', compact('tickets', 'kpis'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+        return view('tickets.index', compact('tickets', 'kpis'));
     }
 
     /**
@@ -82,7 +84,7 @@ class TicketController extends Controller
 
         $request->validate($rules);
 
-        Ticket::create([
+        $ticket = Ticket::create([
             'date_requested' => $request->date_requested,
             'requestor_id' => Auth::user()->hasRole('Admin') ? $request->requestor_id : Auth::id(),
             'request_type_id' => $request->request_type_id,
@@ -91,6 +93,13 @@ class TicketController extends Controller
             'urgency' => $request->urgency,
             'status' => Ticket::STATUS_PENDING,
         ]);
+
+        // Send email to requestor
+        try {
+            Mail::to($ticket->requestor->email)->send(new TicketCreated($ticket));
+        } catch (\Exception $e) {
+            // Log error or ignore if mail fails
+        }
 
         return redirect()->route('tickets.index')
             ->with('success', 'Ticket created successfully.');
@@ -163,6 +172,15 @@ class TicketController extends Controller
             'datetime_started',
             'datetime_ended',
         ]));
+
+        // Send email update if checkbox is checked
+        if ($request->has('send_email')) {
+            try {
+                Mail::to($ticket->requestor->email)->send(new TicketUpdated($ticket));
+            } catch (\Exception $e) {
+                // Log error or ignore
+            }
+        }
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket updated successfully.');

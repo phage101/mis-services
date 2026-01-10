@@ -45,9 +45,39 @@
                             <label for="confirm-password">Confirm Password (Optional)</label>
                             <input type="password" name="confirm-password" id="confirm-password" class="form-control">
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="office_id">Office</label>
+                                    <select name="office_id" id="office_id" class="form-control" required>
+                                        <option value="">Select Office</option>
+                                        @foreach($offices as $office)
+                                            <option value="{{ $office->id }}" {{ old('office_id', $user->office_id) == $office->id ? 'selected' : '' }}>
+                                                {{ $office->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="division_id">Division</label>
+                                    <select name="division_id" id="division_id" class="form-control" required>
+                                        <option value="">Select Division</option>
+                                        @foreach($divisions as $division)
+                                            <option value="{{ $division->id }}" {{ old('division_id', $user->division_id) == $division->id ? 'selected' : '' }}>
+                                                {{ $division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="roles">Role</label>
-                            <select name="roles[]" id="roles" class="form-control" multiple>
+                            <select name="roles[]" id="roles" class="form-control" multiple required>
                                 @foreach($roles as $id => $name)
                                     <option value="{{ $id }}" {{ in_array($id, $userRole) ? 'selected' : '' }}>{{ $name }}
                                     </option>
@@ -61,3 +91,31 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#office_id').change(function() {
+        var officeId = $(this).val();
+        var divisionSelect = $('#division_id');
+        
+        divisionSelect.html('<option value="">Loading...</option>');
+        
+        if (officeId) {
+            $.ajax({
+                url: '{{ route("offices.divisions", ":id") }}'.replace(':id', officeId),
+                type: 'GET',
+                success: function(data) {
+                    divisionSelect.html('<option value="">Select Division</option>');
+                    $.each(data, function(key, value) {
+                        divisionSelect.append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            divisionSelect.html('<option value="">Select Division</option>');
+        }
+    });
+});
+</script>
+@endpush

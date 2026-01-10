@@ -90,6 +90,26 @@ class Ticket extends Model
             if (empty($ticket->uuid)) {
                 $ticket->uuid = (string) \Illuminate\Support\Str::uuid();
             }
+
+            if (empty($ticket->request_number)) {
+                $now = now();
+                $year = $now->year;
+                $month = $now->format('m');
+                $prefix = sprintf('ICT-%s-%s-', $year, $month);
+
+                // Get the last ticket for this month/year and extract its sequence number
+                $lastTicket = static::where('request_number', 'like', $prefix . '%')
+                    ->orderBy('request_number', 'desc')
+                    ->first();
+
+                if ($lastTicket && preg_match('/ICT-\d{4}-\d{2}-(\d+)$/', $lastTicket->request_number, $matches)) {
+                    $nextSequence = (int) $matches[1] + 1;
+                } else {
+                    $nextSequence = 1;
+                }
+
+                $ticket->request_number = sprintf('ICT-%s-%s-%03d', $year, $month, $nextSequence);
+            }
         });
 
         static::updating(function ($ticket) {

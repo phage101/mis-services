@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="card-title mb-0">Ticket #{{ $ticket->id }}</h4>
+                        <h4 class="card-title mb-0">Ticket {{ $ticket->request_number ?? '#' . $ticket->id }}</h4>
                         <a class="btn btn-secondary" href="{{ route('tickets.index') }}"><i class="mdi mdi-arrow-left"></i>
                             Back</a>
                     </div>

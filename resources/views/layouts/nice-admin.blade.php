@@ -55,11 +55,6 @@
                             <i class="mdi mdi-toggle-switch mdi-toggle-switch-off font-20"></i>
                         </a>
                     </div>
-                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
-                        data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="ti-more"></i>
-                    </a>
                 </div>
 
                 <div class="navbar-collapse collapse" id="navbarSupportedContent">
@@ -67,10 +62,12 @@
 
                     </ul>
                     <ul class="navbar-nav float-right">
-                        <li class="nav-item dropdown">
+
+                        <!-- Desktop Account Dropdown -->
+                        <li class="nav-item dropdown d-none d-md-block">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href=""
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="m-l-5 font-medium d-none d-sm-inline-block">{{ Auth::user()->name }}
+                                <span class="m-l-5 font-medium">{{ Auth::user()->name }}
                                     <i class="mdi mdi-chevron-down"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
@@ -95,6 +92,8 @@
             <div class="scroll-sidebar">
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
+                        <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span
+                                class="hide-menu">General</span></li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('dashboard') }}"
                                 aria-expanded="false">
@@ -102,6 +101,39 @@
                                 <span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
+
+                        <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu">Core
+                                Services</span></li>
+                        @can('tickets.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('tickets.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-ticket-confirmation"></i>
+                                    <span class="hide-menu">Tickets</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('meetings.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('meetings.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-calendar-clock"></i>
+                                    <span class="hide-menu">Meetings</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('events.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('events.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-calendar-check"></i>
+                                    <span class="hide-menu">Events</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span
+                                class="hide-menu">Administration</span></li>
                         @can('users.list')
                             <li class="sidebar-item">
                                 <a class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -111,27 +143,6 @@
                                 </a>
                             </li>
                         @endcan
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="{{ route('tickets.index') }}" aria-expanded="false">
-                                <i class="mdi mdi-ticket-confirmation"></i>
-                                <span class="hide-menu">Tickets</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="{{ route('meetings.index') }}" aria-expanded="false">
-                                <i class="mdi mdi-calendar-clock"></i>
-                                <span class="hide-menu">Meetings</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="{{ route('events.index') }}" aria-expanded="false">
-                                <i class="mdi mdi-calendar-check"></i>
-                                <span class="hide-menu">Events</span>
-                            </a>
-                        </li>
                         @can('roles.list')
                             <li class="sidebar-item">
                                 <a class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -141,6 +152,45 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('offices.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('offices.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-city"></i>
+                                    <span class="hide-menu">Offices</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('divisions.list')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ route('divisions.index') }}" aria-expanded="false">
+                                    <i class="mdi mdi-source-branch"></i>
+                                    <span class="hide-menu">Divisions</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        <li class="nav-small-cap d-block d-md-none"><i class="mdi mdi-dots-horizontal"></i> <span
+                                class="hide-menu">Account</span></li>
+                        <li class="sidebar-item d-block d-md-none">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                href="{{ route('profile.show') }}" aria-expanded="false">
+                                <i class="ti-user"></i>
+                                <span class="hide-menu">My Profile</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item d-block d-md-none">
+                            <form action="{{ route('logout') }}" method="POST" id="mobile-logout-form">
+                                @csrf
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="javascript:void(0)"
+                                    onclick="document.getElementById('mobile-logout-form').submit();"
+                                    aria-expanded="false">
+                                    <i class="fa fa-power-off"></i>
+                                    <span class="hide-menu">Logout</span>
+                                </a>
+                            </form>
+                        </li>
                     </ul>
                 </nav>
             </div>

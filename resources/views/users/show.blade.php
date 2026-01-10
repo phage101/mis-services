@@ -7,37 +7,39 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12 margin-tb">
-                            <div class="pull-left">
-                                <h2 style="color:white"> Show User</h2>
-                            </div>
-                            <div class="pull-right">
-                                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
-                            </div>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h4 class="card-title mb-0">User Details</h4>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('users.index') }}">
+                            <i class="mdi mdi-arrow-left"></i> Back
+                        </a>
                     </div>
 
-                    <div class="row text-light">
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Name:</strong>
-                                {{ $user->name }}
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Name:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->name }}</p>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Email:</strong>
-                                {{ $user->email }}
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Email:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->email }}</p>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Roles:</strong>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Office:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->office->name ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Division:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->division->name ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="font-weight-bold text-dark">Roles:</label>
+                            <div>
                                 @if(!empty($user->getRoleNames()))
                                     @foreach($user->getRoleNames() as $v)
-                                        <label class="badge badge-success">{{ $v }}</label>
+                                        <span class="badge badge-success">{{ $v }}</span>
                                     @endforeach
+                                @else
+                                    <span class="text-muted">No roles assigned</span>
                                 @endif
                             </div>
                         </div>

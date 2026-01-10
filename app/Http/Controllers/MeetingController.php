@@ -9,6 +9,9 @@ use App\Models\Platform;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MeetingCreated;
+use App\Mail\MeetingUpdated;
 
 class MeetingController extends Controller
 {
@@ -25,7 +28,7 @@ class MeetingController extends Controller
             $query->where('requestor_id', $user->id);
         }
 
-        $meetings = (clone $query)->with(['requestor', 'platform', 'host', 'slots'])->orderBy('created_at', 'desc')->paginate(10);
+        $meetings = (clone $query)->with(['requestor', 'platform', 'host', 'slots'])->orderBy('created_at', 'desc')->get();
 
         $kpis = [
             'total' => (clone $query)->count(),
@@ -34,7 +37,7 @@ class MeetingController extends Controller
             'conflict' => (clone $query)->where('status', Meeting::STATUS_CONFLICT)->count(),
         ];
 
-        return view('meetings.index', compact('meetings', 'kpis'))->with('i', (request()->input('page', 1) - 1) * 10);
+        return view('meetings.index', compact('meetings', 'kpis'));
     }
 
     /**
@@ -87,6 +90,13 @@ class MeetingController extends Controller
             ]);
         }
 
+        // Send email to requestor
+        try {
+            Mail::to($meeting->requestor->email)->send(new MeetingCreated($meeting));
+        } catch (\Exception $e) {
+            // Log error or ignore if mail fails
+        }
+
         return redirect()->route('meetings.index')
             ->with('success', 'Meeting request submitted successfully.');
     }
@@ -137,6 +147,15 @@ class MeetingController extends Controller
         // If scheduled, all slots are approved; otherwise, none are.
         $isApproved = ($request->status === Meeting::STATUS_SCHEDULED);
         $meeting->slots()->update(['is_approved' => $isApproved]);
+
+        // Send email update if checkbox is checked
+        if ($request->has('send_email')) {
+            try {
+                Mail::to($meeting->requestor->email)->send(new MeetingUpdated($meeting));
+            } catch (\Exception $e) {
+                // Log error or ignore
+            }
+        }
 
         return redirect()->route('meetings.show', $meeting)
             ->with('success', 'Meeting updated successfully.');

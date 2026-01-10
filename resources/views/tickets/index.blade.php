@@ -89,7 +89,7 @@
                         <table id="tickets-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>No</th>
+                                    <th>Request #</th>
                                     <th>Date Requested</th>
                                     <th>Requestor</th>
                                     <th>Type</th>
@@ -102,7 +102,7 @@
                             <tbody>
                                 @foreach ($tickets as $key => $ticket)
                                     <tr>
-                                        <td>{{ ++$i }}</td>
+                                        <td><strong>{{ $ticket->request_number ?? '#' . $ticket->id }}</strong></td>
                                         <td>{{ $ticket->date_requested->format('Y-m-d') }}</td>
                                         <td>{{ $ticket->requestor->name }}</td>
                                         <td>{{ $ticket->requestType->name ?? 'N/A' }}</td>
@@ -151,9 +151,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-3">
-                        {!! $tickets->links() !!}
-                    </div>
                 </div>
             </div>
         </div>
@@ -165,8 +162,8 @@
     <script>
         $(document).ready(function () {
             $('#tickets-table').DataTable({
-                "paging": false, // Handled by Laravel pagination
-                "info": false
+                "paging": true,
+                "info": true
             });
         });
     </script>

@@ -102,9 +102,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($events as $event)
+                                @forelse($events as $key => $event)
                                     <tr>
-                                        <td>{{ ++$i }}</td>
+                                        <td>{{ ++$key }}</td>
                                         <td>
                                             <strong>{{ $event->title }}</strong><br>
                                             <small class="text-muted">by {{ $event->organizer->name }}</small>
@@ -170,9 +170,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-3">
-                        {!! $events->links() !!}
-                    </div>
                 </div>
             </div>
         </div>
@@ -184,8 +181,8 @@
     <script>
         $(document).ready(function () {
             $('#events-table').DataTable({
-                "paging": false,
-                "info": false
+                "paging": true,
+                "info": true
             });
         });
     </script>

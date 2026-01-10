@@ -123,7 +123,7 @@
                                 <table id="meetings-table" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>Request #</th>
                                             <th>Date Requested</th>
                                             <th>Requestor</th>
                                             <th>Topic</th>
@@ -134,7 +134,7 @@
                                     <tbody>
                                         @foreach ($meetings as $meeting)
                                             <tr>
-                                                <td>{{ ++$i }}</td>
+                                                <td><strong>{{ $meeting->request_number ?? '#' . $meeting->id }}</strong></td>
                                                 <td>{{ $meeting->date_requested->format('Y-m-d') }}</td>
                                                 <td>{{ $meeting->requestor->name }}</td>
                                                 <td>{{ $meeting->topic }}</td>
@@ -173,9 +173,6 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="mt-3">
-                                {!! $meetings->links() !!}
                             </div>
                         </div>
 
@@ -223,8 +220,8 @@
             });
 
             $('#meetings-table').DataTable({
-                "paging": false,
-                "info": false
+                "paging": true,
+                "info": true
             });
         });
     </script>

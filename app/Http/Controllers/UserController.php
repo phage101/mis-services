@@ -7,6 +7,8 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
+use App\Models\Office;
+use App\Models\Division;
 
 class UserController extends Controller
 {
@@ -30,15 +32,14 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy('id', 'DESC')->paginate(10);
+        $users = User::orderBy('id', 'DESC')->get();
         $kpis = [
             'total' => User::count(),
             'admins' => User::role('Admin')->count(),
             'users' => User::role('User')->count(),
         ];
 
-        return view('users.index', compact('users', 'kpis'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+        return view('users.index', compact('users', 'kpis'));
     }
 
     /**
@@ -49,7 +50,9 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
-        return view('users.create', compact('roles'));
+        $offices = Office::all();
+        $divisions = collect(); // Initially empty, populated via AJAX
+        return view('users.create', compact('roles', 'offices', 'divisions'));
     }
 
     /**
@@ -64,7 +67,9 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            'office_id' => 'required|exists:offices,id',
+            'division_id' => 'required|exists:divisions,id',
         ]);
 
         $input = $request->all();
@@ -100,8 +105,10 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
+        $offices = Office::all();
+        $divisions = Division::where('office_id', $user->office_id)->get();
 
-        return view('users.edit', compact('user', 'roles', 'userRole'));
+        return view('users.edit', compact('user', 'roles', 'userRole', 'offices', 'divisions'));
     }
 
     /**
@@ -117,7 +124,9 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            'office_id' => 'required|exists:offices,id',
+            'division_id' => 'required|exists:divisions,id',
         ]);
 
         $input = $request->all();

@@ -30,8 +30,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Role Management</h4>
-                        <a class="btn btn-info" href="{{ route('roles.create') }}"><i class="mdi mdi-plus"></i> Create New
-                            Role</a>
+                        @can('roles.create')
+                            <a class="btn btn-info" href="{{ route('roles.create') }}"><i class="mdi mdi-plus"></i> Create New
+                                Role</a>
+                        @endcan
                     </div>
 
                     @if ($message = Session::get('success'))
@@ -50,30 +52,31 @@
                             <tbody>
                                 @foreach ($roles as $key => $role)
                                     <tr>
-                                        <td>{{ ++$i }}</td>
+                                        <td>{{ ++$key }}</td>
                                         <td>{{ $role->name }}</td>
                                         <td class="text-right" style="white-space:nowrap;">
-                                            <a class="btn btn-info btn-sm" href="{{ route('roles.show', $role->id) }}"><i
-                                                    class="mdi mdi-eye"></i></a>
-                                            <a class="btn btn-warning btn-sm" href="{{ route('roles.edit', $role->id) }}"><i
-                                                    class="mdi mdi-pencil"></i></a>
-                                            <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                                style="display:inline" onsubmit="return confirm('Are you sure?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"><i
-                                                        class="mdi mdi-delete"></i></button>
-                                            </form>
+                                            @can('roles.list')
+                                                <a class="btn btn-info btn-sm" href="{{ route('roles.show', $role->id) }}"><i
+                                                        class="mdi mdi-eye"></i></a>
+                                            @endcan
+                                            @can('roles.edit')
+                                                <a class="btn btn-warning btn-sm" href="{{ route('roles.edit', $role->id) }}"><i
+                                                        class="mdi mdi-pencil"></i></a>
+                                            @endcan
+                                            @can('roles.delete')
+                                                <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                                    style="display:inline" onsubmit="return confirm('Are you sure?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="mdi mdi-delete"></i></button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <div class="d-flex justify-content-center">
-                        {!! $roles->links() !!}
                     </div>
                 </div>
             </div>
@@ -86,8 +89,8 @@
     <script>
         $(document).ready(function () {
             $('#roles-table').DataTable({
-                "paging": false,
-                "info": false
+                "paging": true,
+                "info": true
             });
         });
     </script>

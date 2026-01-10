@@ -205,7 +205,7 @@
                     <div class="tab-content mt-3">
                         <!-- Registration Form Preview Tab -->
                         @can('viewRegistrationForm', $event)
-                        <div class="tab-pane {{ $activeTab === 'registration-form' ? 'active' : '' }}" id="registration-form" role="tabpanel">
+                        <div class="tab-pane fade {{ $activeTab === 'registration-form' ? 'show active' : '' }}" id="registration-form" role="tabpanel">
                             <div class="card bg-light border p-4">
                                 <h5 class="font-weight-bold border-bottom pb-2 mb-3">Form Preview</h5>
 
@@ -310,11 +310,13 @@
                                         <i class="mdi mdi-eye"></i> View Actual Registration Page
                                     </a>
                                 </div>
-                            @endcan
+                            </div>
+                        </div>
+                        @endcan
 
                         <!-- Registered List Tab -->
                         @can('viewParticipants', $event)
-                        <div class="tab-pane {{ $activeTab === 'participants' ? 'active' : '' }}" id="participants" role="tabpanel">
+                        <div class="tab-pane fade {{ $activeTab === 'participants' ? 'show active' : '' }}" id="participants" role="tabpanel">
                             <div class="sticky-filters shadow-sm p-3 rounded">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0 font-weight-bold text-dark"><i class="mdi mdi-filter-variant mr-1"></i>
@@ -369,11 +371,12 @@
                             <div class="participants-table-container">
                                 @include('events.partials.participants_table')
                             </div>
+                        </div>
                         @endcan
 
                         <!-- Check-in Station Tab -->
                         @can('manageAttendance', $event)
-                        <div class="tab-pane {{ $activeTab === 'checkin-station' ? 'active' : '' }}" id="checkin-station" role="tabpanel">
+                        <div class="tab-pane fade {{ $activeTab === 'checkin-station' ? 'show active' : '' }}" id="checkin-station" role="tabpanel">
                             <div class="row">
                                 <!-- Left Column: Scanner & Controls -->
                                 <div class="col-lg-4">
@@ -507,6 +510,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         @endcan
                     </div>
                     @endif
@@ -689,6 +693,12 @@
             const stopBtn = document.getElementById('stop-scanner');
             const resultsLog = document.getElementById('scanner-results');
 
+            if (!scannerContainer || !startBtn || !stopBtn) {
+                // If scanner elements don't exist (e.g. user doesn't have permission), 
+                // we skip scanner initialization but keep the rest of the script running.
+                return;
+            }
+
             function onScanSuccess(decodedText, decodedResult) {
                 if (!decodedText.includes('mark-attendance')) return;
 
@@ -781,8 +791,8 @@
                 }
             }
 
-            startBtn.addEventListener('click', startScanner);
-            stopBtn.addEventListener('click', stopScanner);
+            if (startBtn) startBtn.addEventListener('click', startScanner);
+            if (stopBtn) stopBtn.addEventListener('click', stopScanner);
 
             // Stop scanner when switching tabs
             $('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {

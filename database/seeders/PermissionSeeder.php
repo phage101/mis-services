@@ -55,6 +55,18 @@ class PermissionSeeder extends Seeder
             'events.edit',
             'events.delete',
             'events.attendance',
+
+            // Office Management
+            'offices.list',
+            'offices.create',
+            'offices.edit',
+            'offices.delete',
+
+            // Division Management
+            'divisions.list',
+            'divisions.create',
+            'divisions.edit',
+            'divisions.delete',
         ];
 
         foreach ($permissions as $permission) {

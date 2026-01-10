@@ -7,31 +7,27 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12 margin-tb">
-                            <div class="pull-left">
-                                <h2 style="color:white"> Show Role</h2>
-                            </div>
-                            <div class="pull-right">
-                                <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
-                            </div>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h4 class="card-title mb-0">Role Details</h4>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('roles.index') }}">
+                            <i class="mdi mdi-arrow-left"></i> Back
+                        </a>
                     </div>
 
-                    <div class="row text-light">
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Name:</strong>
-                                {{ $role->name }}
-                            </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="font-weight-bold text-dark">Name:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $role->name }}</p>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <strong>Permissions:</strong>
+                        <div class="col-md-12 mb-3">
+                            <label class="font-weight-bold text-dark">Permissions:</label>
+                            <div class="p-3 bg-light border rounded">
                                 @if(!empty($rolePermissions))
                                     @foreach($rolePermissions as $v)
-                                        <label class="label label-success">{{ $v->name }},</label>
+                                        <span class="badge badge-primary mr-1 mb-1">{{ $v->name }}</span>
                                     @endforeach
+                                @else
+                                    <span class="text-muted">No permissions assigned</span>
                                 @endif
                             </div>
                         </div>

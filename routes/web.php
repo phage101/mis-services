@@ -15,9 +15,7 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -35,11 +33,14 @@ Route::middleware('auth')->group(function () {
     // User & Role Management
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::resource('roles', \App\Http\Controllers\RoleController::class);
+    Route::resource('offices', \App\Http\Controllers\OfficeController::class);
+    Route::resource('divisions', \App\Http\Controllers\DivisionController::class);
 
     // Ticketing Module
     Route::resource('tickets', \App\Http\Controllers\TicketController::class);
     Route::post('tickets/{ticket}/response', [\App\Http\Controllers\TicketController::class, 'addResponse'])->name('tickets.response');
     Route::get('api/request-types/{type}/categories', [\App\Http\Controllers\TicketController::class, 'getCategories'])->name('api.categories');
+    Route::get('api/offices/{office}/divisions', [\App\Http\Controllers\OfficeController::class, 'getDivisions'])->name('offices.divisions');
 
     // Meeting Scheduler
     Route::resource('meetings', \App\Http\Controllers\MeetingController::class);

@@ -38,6 +38,26 @@ class Meeting extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) \Illuminate\Support\Str::uuid();
             }
+
+            if (empty($model->request_number)) {
+                $now = now();
+                $year = $now->year;
+                $month = $now->format('m');
+                $prefix = sprintf('MTG-%s-%s-', $year, $month);
+
+                // Get the last meeting for this month/year and extract its sequence number
+                $lastMeeting = static::where('request_number', 'like', $prefix . '%')
+                    ->orderBy('request_number', 'desc')
+                    ->first();
+
+                if ($lastMeeting && preg_match('/MTG-\d{4}-\d{2}-(\d+)$/', $lastMeeting->request_number, $matches)) {
+                    $nextSequence = (int) $matches[1] + 1;
+                } else {
+                    $nextSequence = 1;
+                }
+
+                $model->request_number = sprintf('MTG-%s-%s-%03d', $year, $month, $nextSequence);
+            }
         });
     }
 

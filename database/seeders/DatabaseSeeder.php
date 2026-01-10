@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RequestTypeCategorySeeder::class,
             MeetingMasterSeeder::class,
             PermissionSeeder::class, // Centralized permission management
+            OfficeAndDivisionSeeder::class,
         ]);
 
         // create admin user if not exists

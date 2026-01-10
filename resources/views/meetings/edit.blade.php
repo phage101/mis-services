@@ -94,6 +94,14 @@
                                 rows="4">{{ old('meeting_details', $meeting->meeting_details) }}</textarea>
                         </div>
 
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="send_email" name="send_email"
+                                    value="1" checked>
+                                <label class="custom-control-label" for="send_email">Notify Requestor via Email</label>
+                            </div>
+                        </div>
+
                         <div class="text-right">
                             <button type="submit" class="btn btn-info"><i class="mdi mdi-content-save"></i> Save
                                 Changes</button>

@@ -60,8 +60,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Users Management</h4>
-                        <a class="btn btn-info" href="{{ route('users.create') }}"><i class="mdi mdi-plus"></i> Create New
-                            User</a>
+                        @can('users.create')
+                            <a class="btn btn-info" href="{{ route('users.create') }}"><i class="mdi mdi-plus"></i> Create New
+                                User</a>
+                        @endcan
                     </div>
 
                     @if ($message = Session::get('success'))
@@ -75,6 +77,8 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Office</th>
+                                    <th>Division</th>
                                     <th>Roles</th>
                                     <th class="text-right" style="width:1%; white-space:nowrap;">Action</th>
                                 </tr>
@@ -82,36 +86,39 @@
                             <tbody>
                                 @foreach ($users as $key => $user)
                                     <tr>
-                                        <td>{{ ++$i }}</td>
+                                        <td>{{ ++$key }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td>{{ $user->office->name ?? 'N/A' }}</td>
+                                        <td>{{ $user->division->name ?? 'N/A' }}</td>
                                         <td>
                                             @foreach($user->getRoleNames() as $role)
                                                 <span class="badge badge-primary">{{ $role }}</span>
                                             @endforeach
                                         </td>
                                         <td class="text-right" style="white-space:nowrap;">
-                                            <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}"><i
-                                                    class="mdi mdi-eye"></i></a>
-                                            <a class="btn btn-warning btn-sm" href="{{ route('users.edit', $user->id) }}"><i
-                                                    class="mdi mdi-pencil"></i></a>
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                                style="display:inline" onsubmit="return confirm('Are you sure?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"><i
-                                                        class="mdi mdi-delete"></i></button>
-                                            </form>
+                                            @can('users.list')
+                                                <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}"><i
+                                                        class="mdi mdi-eye"></i></a>
+                                            @endcan
+                                            @can('users.edit')
+                                                <a class="btn btn-warning btn-sm" href="{{ route('users.edit', $user->id) }}"><i
+                                                        class="mdi mdi-pencil"></i></a>
+                                            @endcan
+                                            @can('users.delete')
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                    style="display:inline" onsubmit="return confirm('Are you sure?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="mdi mdi-delete"></i></button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <div class="d-flex justify-content-center">
-                        {!! $users->links() !!}
                     </div>
                 </div>
             </div>
@@ -124,8 +131,8 @@
     <script>
         $(document).ready(function () {
             $('#users-table').DataTable({
-                "paging": false,
-                "info": false
+                "paging": true,
+                "info": true
             });
         });
     </script>

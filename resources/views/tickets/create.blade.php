@@ -4,7 +4,8 @@
 
 @push('styles')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
     <style>
         .select2-container--bootstrap4 .select2-selection--single {
             height: calc(2.25rem + 2px) !important;
@@ -42,7 +43,8 @@
                                     <select name="requestor_id" id="requestor_id" class="form-control select2" required>
                                         <option value="">Select Requestor</option>
                                         @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ old('requestor_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                            <option value="{{ $user->id }}" {{ old('requestor_id') == $user->id ? 'selected' : '' }}>
+                                                {{ $user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -102,41 +104,44 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-$(document).ready(function() {
-    // Initialize Select2
-    $('.select2').select2({
-        theme: 'bootstrap4',
-        width: '100%',
-        placeholder: 'Select Requestor'
-    });
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                width: '100%',
+                placeholder: 'Select Requestor'
+            });
 
-    $('#request_type_id').on('change', function() {
-        var typeId = $(this).val();
-        var $categorySelect = $('#category_id');
-        
-        $categorySelect.empty().append('<option value="">Select Category</option>');
-        
-        if (typeId) {
-            $categorySelect.prop('disabled', true);
-            $.ajax({
-                url: '/api/request-types/' + typeId + '/categories',
-                type: 'GET',
-                success: function(data) {
-                    $.each(data, function(key, category) {
-                        $categorySelect.append('<option value="' + category.id + '">' + category.name + '</option>');
+            $('#request_type_id').on('change', function () {
+                var typeId = $(this).val();
+                var $categorySelect = $('#category_id');
+
+                $categorySelect.empty().append('<option value="">Select Category</option>');
+
+                if (typeId) {
+                    $categorySelect.prop('disabled', true);
+                    var url = "{{ route('api.categories', ':id') }}";
+                    url = url.replace(':id', typeId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (data) {
+                            $.each(data, function (key, category) {
+                                $categorySelect.append('<option value="' + category.id + '">' + category.name + '</option>');
+                            });
+                            $categorySelect.prop('disabled', false);
+                        },
+                        error: function () {
+                            alert('Error loading categories');
+                        }
                     });
-                    $categorySelect.prop('disabled', false);
-                },
-                error: function() {
-                    alert('Error loading categories');
+                } else {
+                    $categorySelect.prop('disabled', true);
                 }
             });
-        } else {
-            $categorySelect.prop('disabled', true);
-        }
-    });
-});
-</script>
+        });
+    </script>
 @endpush
