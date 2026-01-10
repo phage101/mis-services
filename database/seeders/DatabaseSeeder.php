@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $this->call(RequestTypeCategorySeeder::class);
+        $this->call(MeetingMasterSeeder::class);
 
         // create permissions
         $permissions = [

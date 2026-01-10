@@ -37,12 +37,12 @@
                                 value="{{ old('email', $user->email) }}" required>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="password">Password (Optional)</label>
                             <input type="password" name="password" id="password" class="form-control"
                                 placeholder="Leave blank to keep current">
                         </div>
                         <div class="form-group">
-                            <label for="confirm-password">Confirm Password</label>
+                            <label for="confirm-password">Confirm Password (Optional)</label>
                             <input type="password" name="confirm-password" id="confirm-password" class="form-control">
                         </div>
                         <div class="form-group">

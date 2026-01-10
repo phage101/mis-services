@@ -36,4 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('tickets', \App\Http\Controllers\TicketController::class);
     Route::post('tickets/{ticket}/response', [\App\Http\Controllers\TicketController::class, 'addResponse'])->name('tickets.response');
     Route::get('api/request-types/{type}/categories', [\App\Http\Controllers\TicketController::class, 'getCategories'])->name('api.categories');
+
+    // Meeting Scheduler
+    Route::resource('meetings', \App\Http\Controllers\MeetingController::class);
+    Route::get('api/meetings/check-conflict', [\App\Http\Controllers\MeetingController::class, 'checkConflict'])->name('api.meetings.conflict');
+    Route::get('api/meetings/calendar-events', [\App\Http\Controllers\MeetingController::class, 'calendarEvents'])->name('api.meetings.events');
 });

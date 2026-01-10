@@ -95,14 +95,14 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="datetime_started" class="form-label">Datetime Started</label>
+                                <label for="datetime_started" class="form-label">Datetime Started (Optional)</label>
                                 <input type="datetime-local" name="datetime_started" id="datetime_started"
                                     class="form-control"
                                     value="{{ $ticket->datetime_started ? $ticket->datetime_started->format('Y-m-d\TH:i') : '' }}">
                                 <small class="text-muted">Auto-set when status becomes "On-going"</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="datetime_ended" class="form-label">Datetime Ended</label>
+                                <label for="datetime_ended" class="form-label">Datetime Ended (Optional)</label>
                                 <input type="datetime-local" name="datetime_ended" id="datetime_ended" class="form-control"
                                     value="{{ $ticket->datetime_ended ? $ticket->datetime_ended->format('Y-m-d\TH:i') : '' }}">
                                 <small class="text-muted">Auto-set when status becomes "Completed"</small>
@@ -111,14 +111,14 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="channel" class="form-label">Channel (Mode of Request)</label>
+                                <label for="channel" class="form-label">Channel (Optional)</label>
                                 <input type="text" name="channel" id="channel" class="form-control"
                                     value="{{ old('channel', $ticket->channel) }}" placeholder="e.g. Email, Phone, Walk-in">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="remarks" class="form-label">Admin Remarks</label>
+                            <label for="remarks" class="form-label">Admin Remarks (Optional)</label>
                             <textarea name="remarks" id="remarks" class="form-control"
                                 rows="4">{{ old('remarks', $ticket->remarks) }}</textarea>
                         </div>
