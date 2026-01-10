@@ -9,7 +9,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="card-title mb-0">Meeting {{ $meeting->request_number ?? '#' . $meeting->id }}:
-                            {{ $meeting->topic }}</h4>
+                            {{ $meeting->topic }}
+                        </h4>
                         <a class="btn btn-secondary" href="{{ route('meetings.index') }}"><i class="mdi mdi-arrow-left"></i>
                             Back</a>
                     </div>
@@ -64,7 +65,7 @@
                                     </button>
                                 </div>
                                 <div class="col-md-8 bg-light p-2 border rounded" id="meetingDetailsContent">
-                                    {!! nl2br(e($meeting->meeting_details)) !!}
+                                    <p class="mb-0 text-muted" style="white-space: pre-line;">{{ $meeting->meeting_details }}</p>
                                 </div>
                             </div>
                         @endif

@@ -8,6 +8,8 @@
     <!-- Nice Admin CSS from the project -->
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site') }}"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -182,12 +184,8 @@
 
                         @if(session('participant_uuid'))
                             <div class="card border shadow-sm mx-auto mb-4" style="max-width: 300px;">
-                                <div class="card-body">
-                                    <h6 class="font-weight-bold mb-3">Your Attendance QR Code</h6>
-                                    <div class="mb-3 p-2 bg-white border rounded d-inline-block">
-                                        <img id="participantQrImg"
-                                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode(route('events.attendance.mark', [$event, session('participant_uuid')])) }}"
-                                            alt="Attendance QR Code" style="width: 200px; height: 200px;">
+                                    <div class="mb-3 p-3 bg-white border rounded d-inline-block shadow-sm" id="participantQrContainer">
+                                        {!! QrCode::size(200)->margin(1)->generate(route('events.attendance.mark', [$event, session('participant_uuid')])) !!}
                                     </div>
                                     <p class="small text-muted mb-3">{{ session('participant_name') }}</p>
                                     <button class="btn btn-sm btn-info w-100" onclick="downloadParticipantQR()">
@@ -206,24 +204,26 @@
                     </div>
                     <script>
                         function downloadParticipantQR() {
-                            const img = document.getElementById('participantQrImg');
+                            const svg = document.querySelector('#participantQrContainer svg');
+                            const svgData = new XMLSerializer().serializeToString(svg);
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
-                            const tempImg = new Image();
-                            tempImg.crossOrigin = 'anonymous';
-                            tempImg.onload = function () {
-                                canvas.width = tempImg.width + 40;
-                                canvas.height = tempImg.height + 40;
+                            const img = new Image();
+                            
+                            img.onload = function() {
+                                canvas.width = img.width + 40;
+                                canvas.height = img.height + 40;
                                 ctx.fillStyle = 'white';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.drawImage(tempImg, 20, 20);
+                                ctx.drawImage(img, 20, 20);
                                 const pngFile = canvas.toDataURL('image/png');
                                 const downloadLink = document.createElement('a');
                                 downloadLink.download = 'attendance-qr-{{ session("participant_name") }}.png';
                                 downloadLink.href = pngFile;
                                 downloadLink.click();
                             };
-                            tempImg.src = img.src;
+                            
+                            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
                         }
                     </script>
                 @else
@@ -239,8 +239,9 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('events.register.submit', $event) }}" method="POST">
+                    <form action="{{ route('events.register.submit', $event) }}" method="POST" id="registration-form">
                         @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="row">
                             @php
@@ -347,7 +348,7 @@
                             @foreach($event->formFields as $field)
                                 <div class="col-md-12 mb-4 text-left">
                                     <label class="font-weight-bold">{{ $field->label }}
-                                        {!! $field->is_required ? '<span class="text-danger">*</span>' : '' !!}</label>
+                                        @if($field->is_required)<span class="text-danger">*</span>@endif</label>
 
                                     @if($field->field_type == 'text')
                                         <input type="text" name="custom_fields[{{ $field->id }}]" class="form-control" {{ $field->is_required ? 'required' : '' }}
@@ -426,6 +427,19 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // reCAPTCHA Submission
+        $('#registration-form').submit(function (e) {
+            e.preventDefault();
+            var form = this;
+            grecaptcha.ready(function () {
+                grecaptcha.execute("{{ config('services.recaptcha.site') }}", { action: 'register_event' }).then(function (token) {
+                    $('#g-recaptcha-response').val(token);
+                    form.submit();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

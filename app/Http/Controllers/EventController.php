@@ -315,6 +315,7 @@ class EventController extends Controller
         }
 
         $validationRules['privacy_consent'] = 'required|accepted';
+        $validationRules['g-recaptcha-response'] = ['required', new \App\Rules\Recaptcha];
 
         $request->validate($validationRules);
 

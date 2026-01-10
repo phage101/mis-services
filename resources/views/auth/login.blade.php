@@ -10,6 +10,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
     <title>Login - MIS Services</title>
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site') }}"></script>
 </head>
 
 <body>
@@ -35,8 +37,10 @@
                     <!-- Form -->
                     <div class="row">
                         <div class="col-12">
-                            <form class="form-horizontal m-t-20" method="POST" action="{{ route('login') }}">
+                            <form class="form-horizontal m-t-20" method="POST" action="{{ route('login') }}"
+                                id="loginform-element">
                                 @csrf
+                                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -91,6 +95,18 @@
     <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script>
         $(".preloader").fadeOut();
+
+        // reCAPTCHA Submission
+        $('#loginform-element').submit(function (e) {
+            e.preventDefault();
+            var form = this;
+            grecaptcha.ready(function () {
+                grecaptcha.execute("{{ config('services.recaptcha.site') }}", { action: 'login' }).then(function (token) {
+                    $('#g-recaptcha-response').val(token);
+                    form.submit();
+                });
+            });
+        });
     </script>
 </body>
 

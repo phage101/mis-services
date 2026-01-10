@@ -118,7 +118,7 @@
                                 <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                     href="{{ route('meetings.index') }}" aria-expanded="false">
                                     <i class="mdi mdi-calendar-clock"></i>
-                                    <span class="hide-menu">Meetings</span>
+                                    <span class="hide-menu">Meeting Requests</span>
                                 </a>
                             </li>
                         @endcan

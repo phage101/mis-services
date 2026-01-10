@@ -17,7 +17,7 @@ use App\Http\Controllers\DashboardController;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'throttle:10,1'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -57,4 +57,17 @@ Route::middleware('auth')->group(function () {
 
 // Public Event Registration
 Route::get('events/{event}/register', [\App\Http\Controllers\EventController::class, 'registrationPage'])->name('events.register');
-Route::post('events/{event}/register', [\App\Http\Controllers\EventController::class, 'register'])->name('events.register.submit');
+Route::post('events/{event}/register', [\App\Http\Controllers\EventController::class, 'register'])->name('events.register.submit')->middleware('throttle:5,1');
+
+// Public Service Desk
+Route::get('service-desk', [\App\Http\Controllers\PublicTicketController::class, 'index'])->name('public.tickets.create');
+Route::post('service-desk', [\App\Http\Controllers\PublicTicketController::class, 'store'])->name('public.tickets.store')->middleware('throttle:5,1');
+Route::get('service-desk/track', [\App\Http\Controllers\PublicTicketController::class, 'track'])->name('public.tickets.track')->middleware('throttle:30,1');
+
+// Public Meeting Request
+Route::get('meeting-request', [\App\Http\Controllers\PublicMeetingController::class, 'index'])->name('public.meetings.create');
+Route::post('meeting-request', [\App\Http\Controllers\PublicMeetingController::class, 'store'])->name('public.meetings.store')->middleware('throttle:5,1');
+Route::get('meeting-request/track', [\App\Http\Controllers\PublicMeetingController::class, 'track'])->name('public.meetings.track')->middleware('throttle:30,1');
+Route::get('api/public/users/search', [\App\Http\Controllers\PublicTicketController::class, 'searchUser'])->name('api.public.users.search')->middleware('throttle:20,1');
+Route::get('api/public/request-types/{type}/categories', [\App\Http\Controllers\PublicTicketController::class, 'getCategories'])->name('api.public.categories');
+Route::get('api/public/offices/{office}/divisions', [\App\Http\Controllers\PublicTicketController::class, 'getDivisions'])->name('api.public.divisions');

@@ -263,7 +263,7 @@
                                 @foreach($event->formFields as $field)
                                     <div class="mb-3">
                                         <label class="font-weight-bold">{{ $field->label }}
-                                            {!! $field->is_required ? '<span class="text-danger">*</span>' : '' !!}</label>
+                                            @if($field->is_required)<span class="text-danger">*</span>@endif</label>
 
                                         @if($field->field_type == 'text')
                                             <input type="text" class="form-control" disabled>

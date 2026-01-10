@@ -69,14 +69,13 @@
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 15px;
-            color: #ffffff;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+            color: #002147;
             text-transform: uppercase;
         }
 
         .portal-header p {
             font-size: 20px;
-            color: #ffffff;
+            color: #002147;
             max-width: 650px;
             margin: 0 auto;
             font-weight: 400;
@@ -135,17 +134,6 @@
 
         <div class="home-wrapper">
             <nav class="top-nav">
-                <div class="navbar-brand mr-auto">
-                    <a href="{{ url('/') }}" class="logo d-flex align-items-center">
-                        <b class="logo-icon">
-                            <img src="{{ asset('assets/images/logo-icon.png') }}" alt="homepage" class="light-logo" />
-                        </b>
-                        <span class="logo-text ml-2">
-                            <img src="{{ asset('assets/images/logo-light-text.png') }}" class="light-logo"
-                                alt="homepage" />
-                        </span>
-                    </a>
-                </div>
                 @auth
                     <a href="{{ route('dashboard') }}" class="nav-btn"><i class="mdi mdi-view-dashboard"></i> Dashboard</a>
                 @else
@@ -163,46 +151,50 @@
                     <div class="row">
                         <!-- Ticket Service -->
                         <div class="col-md-4 mb-4">
-                            <a href="{{ route('tickets.index') }}" class="service-card">
+                            <div class="service-card">
                                 <i class="mdi mdi-ticket-confirmation text-info"></i>
                                 <h4>Service Desk</h4>
                                 <p>Request technical support or government services easily.</p>
                                 <div class="mt-4">
-                                    <span class="btn btn-block btn-lg btn-info">Access Service</span>
+                                    <a href="{{ route('public.tickets.create') }}"
+                                        class="btn btn-block btn-lg btn-info mb-2">Access Service</a>
+                                    <a href="{{ route('public.tickets.track') }}"
+                                        class="btn btn-block btn-outline-info">Track Request</a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
 
-                        <!-- Meeting Hub -->
+                        <!-- Meeting Request -->
                         <div class="col-md-4 mb-4">
-                            <a href="{{ route('meetings.index') }}" class="service-card">
+                            <div class="service-card">
                                 <i class="mdi mdi-calendar-clock text-success"></i>
-                                <h4>Meeting Hub</h4>
-                                <p>Schedule and manage your video conferences efficiently.</p>
+                                <h4>Meeting Request</h4>
+                                <p>Request and manage your online meeting links easily.</p>
                                 <div class="mt-4">
-                                    <span class="btn btn-block btn-lg btn-success">Access Service</span>
+                                    <a href="{{ route('public.meetings.create') }}"
+                                        class="btn btn-block btn-lg btn-success mb-2">Access Service</a>
+                                    <a href="{{ route('public.meetings.track') }}"
+                                        class="btn btn-block btn-outline-success">Track Request</a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
 
                         <!-- Event Portal -->
                         <div class="col-md-4 mb-4">
-                            <a href="{{ route('events.index') }}" class="service-card">
+                            <div class="service-card">
                                 <i class="mdi mdi-calendar-check text-warning"></i>
                                 <h4>Event Center</h4>
                                 <p>Explore upcoming workshops and register online.</p>
                                 <div class="mt-4">
-                                    <span class="btn btn-block btn-lg btn-warning">Access Service</span>
+                                    <a href="{{ route('events.index') }}"
+                                        class="btn btn-block btn-lg btn-warning">Access Service</a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <footer class="text-center p-4" style="color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.2);">
-                &copy; {{ date('Y') }} MIS Services Portal. All Rights Reserved.
-            </footer>
         </div>
     </div>
 
