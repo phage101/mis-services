@@ -117,6 +117,13 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                href="{{ route('tickets.index') }}" aria-expanded="false">
+                                <i class="mdi mdi-ticket-confirmation"></i>
+                                <span class="hide-menu">Tickets</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ route('roles.index') }}" aria-expanded="false">
                                 <i class="mdi mdi-security"></i>
                                 <span class="hide-menu">Roles</span>

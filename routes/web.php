@@ -31,4 +31,9 @@ Route::middleware('auth')->group(function () {
     // User & Role Management
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::resource('roles', \App\Http\Controllers\RoleController::class);
+
+    // Ticketing Module
+    Route::resource('tickets', \App\Http\Controllers\TicketController::class);
+    Route::post('tickets/{ticket}/response', [\App\Http\Controllers\TicketController::class, 'addResponse'])->name('tickets.response');
+    Route::get('api/request-types/{type}/categories', [\App\Http\Controllers\TicketController::class, 'getCategories'])->name('api.categories');
 });

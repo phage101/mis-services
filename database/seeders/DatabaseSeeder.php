@@ -16,9 +16,40 @@ class DatabaseSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create roles
-        $roleAdmin = \Spatie\Permission\Models\Role::create(['name' => 'admin']);
-        $roleUser = \Spatie\Permission\Models\Role::create(['name' => 'user']);
+        $this->call(RequestTypeCategorySeeder::class);
+
+        // create permissions
+        $permissions = [
+            'role-list',
+            'role-create',
+            'role-edit',
+            'role-delete',
+            'user-list',
+            'user-create',
+            'user-edit',
+            'user-delete',
+            'ticket-list',
+            'ticket-create',
+            'ticket-view',
+            'ticket-edit',
+            'ticket-delete',
+            'ticket-respond'
+        ];
+
+        foreach ($permissions as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        // create roles and assign permissions
+        $roleAdmin = \Spatie\Permission\Models\Role::create(['name' => 'Admin']);
+        $roleAdmin->givePermissionTo(\Spatie\Permission\Models\Permission::all());
+
+        $roleUser = \Spatie\Permission\Models\Role::create(['name' => 'User']);
+        $roleUser->givePermissionTo([
+            'ticket-list',
+            'ticket-create',
+            'ticket-view'
+        ]);
 
         // create admin user
         $admin = \App\Models\User::factory()->create([
