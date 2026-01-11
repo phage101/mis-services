@@ -38,10 +38,19 @@
             display: inline-block;
             animation: pulse-small 2s infinite;
         }
+
         @keyframes pulse-small {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 
@@ -76,90 +85,127 @@
                             <div class="card border shadow-sm mb-0">
                                 <div class="card-body p-0">
                                     @if($event->banner_image)
-                                        <img src="{{ asset('storage/' . $event->banner_image) }}" alt="Event Banner" class="event-banner">
+                                        <img src="{{ asset('storage/' . $event->banner_image) }}" alt="Event Banner"
+                                            class="event-banner">
                                     @endif
-                                    
+
                                     <div class="p-3">
                                         <h5 class="font-weight-bold mb-3 border-bottom pb-2">Event Information</h5>
 
-                                    <div class="mb-4">
-                                        <h6 class="font-weight-bold text-muted small text-uppercase">Description</h6>
-                                        <p class="mb-0">{{ $event->description ?: 'No description provided.' }}</p>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-6 mb-3">
-                                            <h6 class="font-weight-bold text-muted small text-uppercase">Event Type & Classification</h6>
-                                            <p class="mb-0">
-                                                <i class="mdi mdi-tag mr-1 text-info"></i> {{ $event->event_type }} 
-                                                <span class="badge badge-info ml-1">{{ $event->classification }}</span>
-                                                @if($event->enable_qr)
-                                                    <span class="badge badge-success ml-1"><i class="mdi mdi-qrcode"></i> QR Enabled</span>
-                                                @else
-                                                    <span class="badge badge-secondary ml-1"><i class="mdi mdi-qrcode-off"></i> QR Disabled</span>
-                                                @endif
-                                            </p>
+                                        <div class="mb-4">
+                                            <h6 class="font-weight-bold text-muted small text-uppercase">Description</h6>
+                                            <p class="mb-0">{{ $event->description ?: 'No description provided.' }}</p>
                                         </div>
-                                        <div class="col-sm-6 mb-3">
-                                            <h6 class="font-weight-bold text-muted small text-uppercase">Venue
-                                                ({{ ucfirst($event->venue_type) }})</h6>
-                                            <p class="mb-0 font-weight-bold text-info"><i
-                                                    class="mdi mdi-map-marker mr-1"></i> {{ $event->venue_platform }}</p>
-                                        </div>
-                                    </div>
 
-                                    <div class="mb-2">
-                                        <h6 class="font-weight-bold text-muted small text-uppercase">Event Schedule</h6>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-bordered mt-2 mb-0">
-                                                <thead class="bg-light">
-                                                    <tr>
-                                                        <th>Date</th>
-                                                        <th>Time</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($event->dates as $eventDate)
+                                        <div class="row">
+                                            <div class="col-sm-6 mb-3">
+                                                <h6 class="font-weight-bold text-muted small text-uppercase">Event Type &
+                                                    Classification</h6>
+                                                <p class="mb-0">
+                                                    <i class="mdi mdi-tag mr-1 text-info"></i> {{ $event->event_type }}
+                                                    <span class="badge badge-info ml-1">{{ $event->classification }}</span>
+                                                    @if($event->enable_qr)
+                                                        <span class="badge badge-success ml-1"><i class="mdi mdi-qrcode"></i> QR
+                                                            Enabled</span>
+                                                    @else
+                                                        <span class="badge badge-secondary ml-1"><i
+                                                                class="mdi mdi-qrcode-off"></i> QR Disabled</span>
+                                                    @endif
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-6 mb-3">
+                                                <h6 class="font-weight-bold text-muted small text-uppercase">Venue
+                                                    ({{ ucfirst($event->venue_type) }})</h6>
+                                                <p class="mb-0 font-weight-bold text-info"><i
+                                                        class="mdi mdi-map-marker mr-1"></i> {{ $event->venue_platform }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <h6 class="font-weight-bold text-muted small text-uppercase">Event Schedule</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                                    <thead class="bg-light">
                                                         <tr>
-                                                            <td>{{ $eventDate->date->format('F d, Y') }} ({{ $eventDate->date->format('l') }})</td>
-                                                            <td>{{ \Carbon\Carbon::parse($eventDate->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($eventDate->end_time)->format('h:i A') }}</td>
+                                                            <th>Date</th>
+                                                            <th>Time</th>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($event->dates as $eventDate)
+                                                            <tr>
+                                                                <td>{{ $eventDate->date->format('F d, Y') }}
+                                                                    ({{ $eventDate->date->format('l') }})</td>
+                                                                <td>{{ \Carbon\Carbon::parse($eventDate->start_time)->format('h:i A') }}
+                                                                    -
+                                                                    {{ \Carbon\Carbon::parse($eventDate->end_time)->format('h:i A') }}
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="card border shadow-sm mb-0 text-center h-100">
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold mb-3">Registration Link</h5>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="regLink"
-                                            value="{{ route('events.register', $event) }}" readonly>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-info" type="button" onclick="copyRegLink()">
-                                                <i class="mdi mdi-content-copy"></i>
+                                    @if($event->disable_registration)
+                                        <h5 class="font-weight-bold mb-3">Attendance Form</h5>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="attendLink"
+                                                value="{{ route('events.attend', $event) }}" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-success" type="button" onclick="copyAttendLink()">
+                                                    <i class="mdi mdi-content-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="qr-container p-3 border rounded bg-white d-inline-block mb-3">
+                                            <img id="attendQrImg"
+                                                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('events.attend', $event)) }}"
+                                                alt="Attendance QR Code" style="width: 150px; height: 150px;">
+                                        </div>
+
+                                        <div class="mt-2">
+                                            <button class="btn btn-outline-success btn-sm" onclick="downloadAttendQR()">
+                                                <i class="mdi mdi-download"></i> Download QR Code
                                             </button>
                                         </div>
-                                    </div>
 
-                                    <div class="qr-container p-3 border rounded bg-white d-inline-block mb-3">
-                                        <img id="qrCodeImg"
-                                            src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('events.register', $event)) }}"
-                                            alt="QR Code" style="width: 150px; height: 150px;">
-                                    </div>
+                                        <p class="text-muted small mt-3 mb-0">Share this QR code or link for self-attendance.
+                                        </p>
+                                    @else
+                                        <h5 class="font-weight-bold mb-3">Registration Link</h5>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="regLink"
+                                                value="{{ route('events.register', $event) }}" readonly>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-info" type="button" onclick="copyRegLink()">
+                                                    <i class="mdi mdi-content-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                    <div class="mt-2">
-                                        <button class="btn btn-outline-info btn-sm" onclick="downloadQR()">
-                                            <i class="mdi mdi-download"></i> Download QR Code
-                                        </button>
-                                    </div>
+                                        <div class="qr-container p-3 border rounded bg-white d-inline-block mb-3">
+                                            <img id="qrCodeImg"
+                                                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('events.register', $event)) }}"
+                                                alt="QR Code" style="width: 150px; height: 150px;">
+                                        </div>
 
-                                    <p class="text-muted small mt-3 mb-0">Share this QR code or link with participants.</p>
+                                        <div class="mt-2">
+                                            <button class="btn btn-outline-info btn-sm" onclick="downloadQR()">
+                                                <i class="mdi mdi-download"></i> Download QR Code
+                                            </button>
+                                        </div>
+
+                                        <p class="text-muted small mt-3 mb-0">Share this QR code or link with participants.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -169,355 +215,556 @@
                         $canViewRegForm = Auth::user()->can('viewRegistrationForm', $event);
                         $canViewParticipants = Auth::user()->can('viewParticipants', $event);
                         $canManageAttendance = Auth::user()->can('manageAttendance', $event);
-                        
+
                         // Determine which tab should be active by default
                         $activeTab = $canViewRegForm ? 'registration-form' : ($canViewParticipants ? 'participants' : ($canManageAttendance ? 'checkin-station' : null));
                     @endphp
 
                     @if($activeTab)
-                    <!-- Tabs Section -->
-                    <ul class="nav nav-tabs customtab" role="tablist">
-                        @can('viewRegistrationForm', $event)
-                        <li class="nav-item">
-                            <a class="nav-link {{ $activeTab === 'registration-form' ? 'active' : '' }}" data-toggle="tab" href="#registration-form" role="tab">
-                                <span class="hidden-sm-up"><i class="mdi mdi-format-list-bulleted"></i></span>
-                                <span class="hidden-xs-down">Registration Form
-                                    ({{ $event->formFields->count() }} Custom Fields)</span>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('viewParticipants', $event)
-                        <li class="nav-item">
-                            <a class="nav-link {{ $activeTab === 'participants' ? 'active' : '' }}" data-toggle="tab" href="#participants" role="tab">
-                                <span><i class="mdi mdi-account-group mr-1"></i> Registered List ({{ $event->participants->count() }})</span>
-                            </a>
-                        </li>
-                        @endcan
-                        @can('manageAttendance', $event)
-                            <li class="nav-item">
-                                <a class="nav-link {{ $activeTab === 'checkin-station' ? 'active' : '' }}" data-toggle="tab" href="#checkin-station" role="tab" id="scanner-tab">
-                                    <span><i class="mdi mdi-qrcode-scan mr-1"></i> Check-in Station & Attendance</span>
-                                </a>
-                            </li>
-                        @endcan
-                    </ul>
-
-                    <div class="tab-content mt-3">
-                        <!-- Registration Form Preview Tab -->
-                        @can('viewRegistrationForm', $event)
-                        <div class="tab-pane fade {{ $activeTab === 'registration-form' ? 'show active' : '' }}" id="registration-form" role="tabpanel">
-                            <div class="card bg-light border p-4">
-                                <h5 class="font-weight-bold border-bottom pb-2 mb-3">Form Preview</h5>
-
-                                @php
-                                    $standardFields = [
-                                        'firstname' => 'First Name',
-                                        'lastname' => 'Last Name',
-                                        'organization' => 'Organization (Business/School/etc)',
-                                        'designation' => 'Designation/Position',
-                                        'age_bracket' => 'Age Bracket',
-                                        'sex' => 'Sex',
-                                        'province' => 'Province',
-                                        'contact_no' => 'Contact No.',
-                                        'email' => 'Email Address'
-                                    ];
-                                    $enabledFields = $event->registration_fields ?? [];
-                                @endphp
-
-                                @foreach($standardFields as $key => $label)
-                                    @if(in_array($key, $enabledFields))
-                                        <div class="mb-3">
-                                            <label class="font-weight-bold">{{ $label }}</label>
-                                            @if($key == 'province')
-                                                <select class="form-control" disabled>
-                                                    <option>Select province</option>
-                                                    <option>Aklan</option>
-                                                    <option>Antique</option>
-                                                    <option>Capiz</option>
-                                                    <option>Guimaras</option>
-                                                    <option>Iloilo</option>
-                                                    <option>Negros Occidental</option>
-                                                    <option>Others</option>
-                                                </select>
-                                            @elseif($key == 'sex')
-                                                <select class="form-control" disabled>
-                                                    <option>Select sex</option>
-                                                    <option>Male</option>
-                                                    <option>Female</option>
-                                                </select>
-                                            @elseif($key == 'age_bracket')
-                                                <select class="form-control" disabled>
-                                                    <option>Select age bracket</option>
-                                                    @foreach(['Below 18', '18-24', '25-34', '35-44', '45-54', '55-64', '65 and above'] as $age)
-                                                        <option>{{ $age }}</option>
-                                                    @endforeach
-                                                </select>
-                                            @else
-                                                <input type="text" class="form-control" disabled
-                                                    placeholder="Participant's {{ $label }}">
-                                            @endif
-                                        </div>
-                                    @endif
-                                @endforeach
-
-                                @foreach($event->formFields as $field)
-                                    <div class="mb-3">
-                                        <label class="font-weight-bold">{{ $field->label }}
-                                            @if($field->is_required)<span class="text-danger">*</span>@endif</label>
-
-                                        @if($field->field_type == 'text')
-                                            <input type="text" class="form-control" disabled>
-                                        @elseif($field->field_type == 'textarea')
-                                            <textarea class="form-control" rows="2" disabled></textarea>
-                                        @elseif($field->field_type == 'select')
-                                            <select class="form-control" disabled>
-                                                @foreach($field->options as $option)
-                                                    <option>{{ trim($option) }}</option>
-                                                @endforeach
-                                            </select>
-                                        @elseif($field->field_type == 'radio')
-                                            <div class="mt-1">
-                                                @foreach($field->options as $option)
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" disabled>
-                                                        <label class="form-check-label">{{ trim($option) }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @elseif($field->field_type == 'checkbox')
-                                            <div class="mt-1">
-                                                @foreach($field->options as $option)
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" disabled>
-                                                        <label class="form-check-label">{{ trim($option) }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
-
-                                @if($event->formFields->isEmpty())
-                                    <div class="text-center py-3 text-muted">
-                                        <i class="mdi mdi-alert-circle-outline mdi-24px"></i>
-                                        <p>No custom fields added for this event.</p>
-                                    </div>
-                                @endif
-
-                                <div class="text-center mt-3 border-top pt-3">
-                                    <a href="{{ route('events.register', $event) }}" target="_blank"
-                                        class="btn btn-outline-info">
-                                        <i class="mdi mdi-eye"></i> View Actual Registration Page
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        @endcan
-
-                        <!-- Registered List Tab -->
-                        @can('viewParticipants', $event)
-                        <div class="tab-pane fade {{ $activeTab === 'participants' ? 'show active' : '' }}" id="participants" role="tabpanel">
-                            <div class="sticky-filters shadow-sm p-3 rounded">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="mb-0 font-weight-bold text-dark"><i class="mdi mdi-filter-variant mr-1"></i>
-                                        Filters</h5>
-                                    <div>
-                                        <button class="btn btn-sm btn-info mr-2" id="refresh-list">
-                                            <i class="mdi mdi-refresh"></i> Refresh List
-                                        </button>
-                                        <a href="{{ route('events.print-attendance', $event) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                            <i class="mdi mdi-printer"></i> Print Attendance Sheet
+                        <!-- Tabs Section -->
+                        <ul class="nav nav-tabs customtab" role="tablist">
+                            @if(!$event->disable_registration)
+                                @can('viewRegistrationForm', $event)
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $activeTab === 'registration-form' ? 'active' : '' }}" data-toggle="tab"
+                                            href="#registration-form" role="tab">
+                                            <span class="hidden-sm-up"><i class="mdi mdi-format-list-bulleted"></i></span>
+                                            <span class="hidden-xs-down">Registration Form
+                                                ({{ $event->formFields->count() }} Custom Fields)</span>
                                         </a>
-                                    </div>
-                                </div>
+                                    </li>
+                                @endcan
+                                @can('viewParticipants', $event)
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $activeTab === 'participants' ? 'active' : '' }}" data-toggle="tab"
+                                            href="#participants" role="tab">
+                                            <span><i class="mdi mdi-account-group mr-1"></i> Registered List
+                                                ({{ $event->participants->count() }})</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            @endif
+                            @can('manageAttendance', $event)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ ($event->disable_registration || $activeTab === 'checkin-station') ? 'active' : '' }}"
+                                        data-toggle="tab" href="#checkin-station" role="tab" id="scanner-tab">
+                                        <span><i class="mdi mdi-qrcode-scan mr-1"></i>
+                                            {{ $event->disable_registration ? 'Attendance Tracker' : 'Check-in Station & Attendance' }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
 
-                                <div class="row">
-                                    @php
-                                        $filterFields = ['organization', 'sex', 'province'];
-                                    @endphp
-                                    @foreach($standardFields as $key => $label)
-                                        @if(in_array($key, $enabledFields) && in_array($key, $filterFields))
-                                            <div class="col-md-3 mb-2">
-                                                <label class="small font-weight-bold">By {{ $label }}</label>
-                                                <select class="form-control form-control-sm filter-input"
-                                                    data-column-class="col-{{ $key }}">
-                                                    <option value="">All {{ $label }}</option>
-                                                    @foreach($event->participants->pluck($key)->unique()->filter()->sort() as $value)
-                                                        <option value="{{ $value }}">{{ $value }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    
-                                    {{-- Custom Fields Filters --}}
-                                    @foreach($event->formFields as $field)
-                                        @if(in_array($field->field_type, ['select', 'radio']))
-                                            <div class="col-md-3 mb-2">
-                                                <label class="small font-weight-bold">By {{ $field->label }}</label>
-                                                <select class="form-control form-control-sm filter-input"
-                                                    data-column-class="col-field-{{ $field->id }}">
-                                                    <option value="">All {{ $field->label }}</option>
-                                                    @foreach($field->options as $option)
-                                                        <option value="{{ trim($option) }}">{{ trim($option) }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
+                        <div class="tab-content mt-3">
+                            <!-- Registration Form Preview Tab -->
+                            @if(!$event->disable_registration)
+                                @can('viewRegistrationForm', $event)
+                                    <div class="tab-pane fade {{ $activeTab === 'registration-form' ? 'show active' : '' }}"
+                                        id="registration-form" role="tabpanel">
+                                        <div class="card bg-light border p-4">
+                                            <h5 class="font-weight-bold border-bottom pb-2 mb-3">Form Preview</h5>
 
-                            <div class="participants-table-container">
-                                @include('events.partials.participants_table')
-                            </div>
-                        </div>
-                        @endcan
+                                            @php
+                                                $standardFields = [
+                                                    'firstname' => 'First Name',
+                                                    'lastname' => 'Last Name',
+                                                    'organization' => 'Organization (Business/School/etc)',
+                                                    'designation' => 'Designation/Position',
+                                                    'age_bracket' => 'Age Bracket',
+                                                    'sex' => 'Sex',
+                                                    'province' => 'Province',
+                                                    'contact_no' => 'Contact No.',
+                                                    'email' => 'Email Address'
+                                                ];
+                                                $enabledFields = $event->registration_fields ?? [];
+                                            @endphp
 
-                        <!-- Check-in Station Tab -->
-                        @can('manageAttendance', $event)
-                        <div class="tab-pane fade {{ $activeTab === 'checkin-station' ? 'show active' : '' }}" id="checkin-station" role="tabpanel">
-                            <div class="row">
-                                <!-- Left Column: Scanner & Controls -->
-                                <div class="col-lg-4">
-                                    <div class="card border shadow-sm sticky-top" style="top: 20px;">
-                                        <div class="card-body">
-                                            <h5 class="font-weight-bold mb-3"><i class="mdi mdi-qrcode-scan mr-1 text-primary"></i> Scan Station</h5>
-                                            
-                                            <!-- Date Selector for QR Scanner -->
-                                            <div class="form-group mb-4 bg-light p-3 rounded border">
-                                                <label class="font-weight-bold small text-uppercase">Scanning for Session:</label>
-                                                <select id="scanner-date-id" class="form-control font-weight-bold border-primary">
-                                                    @foreach($event->dates as $date)
-                                                        <option value="{{ $date->id }}" {{ $date->date->isToday() ? 'selected' : '' }}>
-                                                            Day {{ $loop->iteration }}: {{ $date->date->format('F d, Y') }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <small class="text-muted mt-2 d-block"><i class="mdi mdi-information-outline"></i> The attendance list on the right will sync with this selection.</small>
-                                            </div>
+                                            @foreach($standardFields as $key => $label)
+                                                @if(in_array($key, $enabledFields))
+                                                    <div class="mb-3">
+                                                        <label class="font-weight-bold">{{ $label }}</label>
+                                                        @if($key == 'province')
+                                                            <select class="form-control" disabled>
+                                                                <option>Select province</option>
+                                                                <option>Aklan</option>
+                                                                <option>Antique</option>
+                                                                <option>Capiz</option>
+                                                                <option>Guimaras</option>
+                                                                <option>Iloilo</option>
+                                                                <option>Negros Occidental</option>
+                                                                <option>Others</option>
+                                                            </select>
+                                                        @elseif($key == 'sex')
+                                                            <select class="form-control" disabled>
+                                                                <option>Select sex</option>
+                                                                <option>Male</option>
+                                                                <option>Female</option>
+                                                            </select>
+                                                        @elseif($key == 'age_bracket')
+                                                            <select class="form-control" disabled>
+                                                                <option>Select age bracket</option>
+                                                                @foreach(['Below 18', '18-24', '25-34', '35-44', '45-54', '55-64', '65 and above'] as $age)
+                                                                    <option>{{ $age }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <input type="text" class="form-control" disabled
+                                                                placeholder="Participant's {{ $label }}">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endforeach
 
-                                            <div id="reader" style="width: 100%; min-height: 250px; border: 2px dashed #ddd; border-radius: 12px; overflow: hidden; background: #fafafa; margin: 0 auto;"></div>
-                                            
-                                            <div class="mt-3">
-                                                <button class="btn btn-primary btn-block shadow-sm" id="start-scanner">
-                                                    <i class="mdi mdi-play mr-1"></i> Start Scanning
-                                                </button>
-                                                <button class="btn btn-danger btn-block d-none shadow-sm" id="stop-scanner">
-                                                    <i class="mdi mdi-stop mr-1"></i> Stop Camera
-                                                </button>
-                                            </div>
+                                            @foreach($event->formFields as $field)
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold">{{ $field->label }}
+                                                        @if($field->is_required)<span class="text-danger">*</span>@endif</label>
 
-                                            <hr class="my-4">
-
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <h6 class="font-weight-bold mb-0 text-muted small text-uppercase">Recent Activity</h6>
-                                                <button class="btn btn-link btn-xs p-0 text-danger" onclick="document.getElementById('scanner-results').innerHTML = ''">Clear</button>
-                                            </div>
-                                            <div id="scanner-results" style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
-                                                <div class="text-center text-muted py-4">
-                                                    <p class="small font-italic mb-0">No scans yet in this session.</p>
+                                                    @if($field->field_type == 'text')
+                                                        <input type="text" class="form-control" disabled>
+                                                    @elseif($field->field_type == 'textarea')
+                                                        <textarea class="form-control" rows="2" disabled></textarea>
+                                                    @elseif($field->field_type == 'select')
+                                                        <select class="form-control" disabled>
+                                                            @foreach($field->options as $option)
+                                                                <option>{{ trim($option) }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    @elseif($field->field_type == 'radio')
+                                                        <div class="mt-1">
+                                                            @foreach($field->options as $option)
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio" disabled>
+                                                                    <label class="form-check-label">{{ trim($option) }}</label>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @elseif($field->field_type == 'checkbox')
+                                                        <div class="mt-1">
+                                                            @foreach($field->options as $option)
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="checkbox" disabled>
+                                                                    <label class="form-check-label">{{ trim($option) }}</label>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
                                                 </div>
+                                            @endforeach
+
+                                            @if($event->formFields->isEmpty())
+                                                <div class="text-center py-3 text-muted">
+                                                    <i class="mdi mdi-alert-circle-outline mdi-24px"></i>
+                                                    <p>No custom fields added for this event.</p>
+                                                </div>
+                                            @endif
+
+                                            <div class="text-center mt-3 border-top pt-3">
+                                                <a href="{{ route('events.register', $event) }}" target="_blank"
+                                                    class="btn btn-outline-info">
+                                                    <i class="mdi mdi-eye"></i> View Actual Registration Page
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endcan
+                            @endif
 
-                                <!-- Right Column: Attendance List -->
-                                <div class="col-lg-8">
-                                    <div class="card border shadow-sm">
-                                        <div class="card-body">
+                            <!-- Registered List Tab -->
+                            @if(!$event->disable_registration)
+                                @can('viewParticipants', $event)
+                                    <div class="tab-pane fade {{ $activeTab === 'participants' ? 'show active' : '' }}"
+                                        id="participants" role="tabpanel">
+                                        <div class="sticky-filters shadow-sm p-3 rounded">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h5 class="card-title mb-0">Attendance Tracker</h5>
-                                                <div class="btn-group">
-                                                    <a href="{{ route('events.print-attendance', $event) }}" target="_blank" class="btn btn-sm btn-primary">
-                                                        <i class="mdi mdi-printer"></i> Print Sheet
-                                                    </a>
-                                                    <button class="btn btn-sm btn-info" onclick="location.reload()">
-                                                        <i class="mdi mdi-refresh"></i>
+                                                <h5 class="mb-0 font-weight-bold text-dark"><i class="mdi mdi-filter-variant mr-1"></i>
+                                                    Filters</h5>
+                                                <div>
+                                                    <button class="btn btn-sm btn-info mr-2" id="refresh-list">
+                                                        <i class="mdi mdi-refresh"></i> Refresh List
                                                     </button>
+                                                    <a href="{{ route('events.print-attendance', $event) }}" target="_blank"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                        <i class="mdi mdi-printer"></i> Print Attendance Sheet
+                                                    </a>
                                                 </div>
                                             </div>
 
-                                            <!-- Date Pills (Synced with Scanner Select) -->
-                                            <ul class="nav nav-pills mb-4" id="attendance-pills" role="tablist">
-                                                @foreach($event->dates as $index => $date)
-                                                    <li class="nav-item">
-                                                        <a class="nav-link {{ $loop->first ? 'active' : '' }}" 
-                                                           id="pill-day-{{ $date->id }}-tab"
-                                                           data-toggle="pill" 
-                                                           href="#attendance-day-{{ $date->id }}" 
-                                                           data-date-id="{{ $date->id }}"
-                                                           role="tab">
-                                                            Day {{ $index + 1 }}
-                                                        </a>
-                                                    </li>
+                                            <div class="row">
+                                                @php
+                                                    $filterFields = ['organization', 'sex', 'province'];
+                                                @endphp
+                                                @foreach($standardFields as $key => $label)
+                                                    @if(in_array($key, $enabledFields) && in_array($key, $filterFields))
+                                                        <div class="col-md-3 mb-2">
+                                                            <label class="small font-weight-bold">By {{ $label }}</label>
+                                                            <select class="form-control form-control-sm filter-input"
+                                                                data-column-class="col-{{ $key }}">
+                                                                <option value="">All {{ $label }}</option>
+                                                                @foreach($event->participants->pluck($key)->unique()->filter()->sort() as $value)
+                                                                    <option value="{{ $value }}">{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
-                                            </ul>
 
-                                            <div class="tab-content">
-                                                @foreach($event->dates as $date)
-                                                    <div class="tab-pane {{ $loop->first ? 'active' : '' }}" id="attendance-day-{{ $date->id }}" role="tabpanel">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-hover table-striped table-bordered datatable-attendance no-wrap" id="attendance-table-{{ $date->id }}">
-                                                                <thead class="bg-light">
-                                                                    <tr>
-                                                                        <th class="border-top-0">Participant</th>
-                                                                        <th class="border-top-0">Organization</th>
-                                                                        <th class="border-top-0">Status</th>
-                                                                        <th class="border-top-0">Time</th>
-                                                                        <th class="border-top-0 text-center">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($event->participants as $participant)
-                                                                        @php
-                                                                            $att = $participant->attendances->where('event_date_id', $date->id)->first();
-                                                                        @endphp
-                                                                        <tr id="row-{{ $date->id }}-{{ $participant->uuid }}">
-                                                                            <td>
-                                                                                <span class="font-weight-bold">{{ $participant->name }}</span>
-                                                                            </td>
-                                                                            <td><small>{{ Str::limit($participant->organization, 20) }}</small></td>
-                                                                            <td class="status-cell">
-                                                                                @if($att)
-                                                                                    <span class="badge badge-success">Present</span>
-                                                                                @else
-                                                                                    <span class="badge badge-secondary">Not Scanned</span>
-                                                                                @endif
-                                                                            </td>
-                                                                            <td class="time-cell small">{{ $att ? $att->scanned_at->format('h:i A') : '-' }}</td>
-                                                                            <td class="text-center">
-                                                                                @if(!$att)
-                                                                                    <button class="btn btn-xs btn-info shadow-sm mark-manual" 
-                                                                                        data-participant-id="{{ $participant->uuid }}"
-                                                                                        data-date-id="{{ $date->id }}">
-                                                                                        <i class="mdi mdi-check"></i> Mark
-                                                                                    </button>
-                                                                                @else
-                                                                                    <span class="text-success pulse-small"><i class="mdi mdi-check-circle mdi-18px"></i></span>
-                                                                                @endif
-                                                                            </td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
+                                                {{-- Custom Fields Filters --}}
+                                                @foreach($event->formFields as $field)
+                                                    @if(in_array($field->field_type, ['select', 'radio']))
+                                                        <div class="col-md-3 mb-2">
+                                                            <label class="small font-weight-bold">By {{ $field->label }}</label>
+                                                            <select class="form-control form-control-sm filter-input"
+                                                                data-column-class="col-field-{{ $field->id }}">
+                                                                <option value="">All {{ $field->label }}</option>
+                                                                @foreach($field->options as $option)
+                                                                    <option value="{{ trim($option) }}">{{ trim($option) }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        <div class="participants-table-container">
+                                            @include('events.partials.participants_table')
+                                        </div>
+                                    </div>
+                                @endcan
+
+                            @endif
+
+                            <!-- Check-in Station Tab -->
+                            @can('manageAttendance', $event)
+                                <div class="tab-pane fade {{ ($event->disable_registration || $activeTab === 'checkin-station') ? 'show active' : '' }}"
+                                    id="checkin-station" role="tabpanel">
+                                    <div class="row">
+                                        <!-- Left Column: Scanner & Controls OR Attendance Link -->
+                                        <div class="col-lg-4">
+                                            @if($event->disable_registration)
+                                                <!-- Session Selector (for attendance-only events) -->
+                                                <div class="card border shadow-sm sticky-top" style="top: 20px;">
+                                                    <div class="card-body">
+                                                        <h5 class="font-weight-bold mb-3"><i class="mdi mdi-calendar-clock mr-1 text-success"></i> Sessions</h5>
+                                                        <p class="text-muted small mb-3">Select a session to view attendance.</p>
+                                                        
+                                                        <div class="form-group mb-3 bg-light p-3 rounded border">
+                                                            <label class="font-weight-bold small text-uppercase">Viewing Session:</label>
+                                                            <select id="scanner-date-id" class="form-control font-weight-bold border-success">
+                                                                @foreach($event->dates as $date)
+                                                                    <option value="{{ $date->id }}" {{ $date->date->isToday() ? 'selected' : '' }}>
+                                                                        Day {{ $loop->iteration }}: {{ $date->date->format('F d, Y') }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                </div>
+                                            @else
+                                                <!-- QR Scan Station (for regular events) -->
+                                                <div class="card border shadow-sm sticky-top" style="top: 20px;">
+                                                    <div class="card-body">
+                                                        <h5 class="font-weight-bold mb-3"><i
+                                                                class="mdi mdi-qrcode-scan mr-1 text-primary"></i> Scan Station</h5>
+
+                                                        <!-- Date Selector for QR Scanner -->
+                                                        <div class="form-group mb-4 bg-light p-3 rounded border">
+                                                            <label class="font-weight-bold small text-uppercase">Scanning for
+                                                                Session:</label>
+                                                            <select id="scanner-date-id"
+                                                                class="form-control font-weight-bold border-primary">
+                                                                @foreach($event->dates as $date)
+                                                                    <option value="{{ $date->id }}" {{ $date->date->isToday() ? 'selected' : '' }}>
+                                                                        Day {{ $loop->iteration }}: {{ $date->date->format('F d, Y') }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <small class="text-muted mt-2 d-block"><i
+                                                                    class="mdi mdi-information-outline"></i> The attendance list on the
+                                                                right will sync with this selection.</small>
+                                                        </div>
+
+                                                        <div id="reader"
+                                                            style="width: 100%; min-height: 250px; border: 2px dashed #ddd; border-radius: 12px; overflow: hidden; background: #fafafa; margin: 0 auto;">
+                                                        </div>
+
+                                                        <div class="mt-3">
+                                                            <button class="btn btn-primary btn-block shadow-sm" id="start-scanner">
+                                                                <i class="mdi mdi-play mr-1"></i> Start Scanning
+                                                            </button>
+                                                            <button class="btn btn-danger btn-block d-none shadow-sm" id="stop-scanner">
+                                                                <i class="mdi mdi-stop mr-1"></i> Stop Camera
+                                                            </button>
+                                                        </div>
+
+                                                        <hr class="my-4">
+
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <h6 class="font-weight-bold mb-0 text-muted small text-uppercase">Recent
+                                                                Activity</h6>
+                                                            <button class="btn btn-link btn-xs p-0 text-danger"
+                                                                onclick="document.getElementById('scanner-results').innerHTML = ''">Clear</button>
+                                                        </div>
+                                                        <div id="scanner-results"
+                                                            style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                                                            <div class="text-center text-muted py-4">
+                                                                <p class="small font-italic mb-0">No scans yet in this session.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Right Column: Attendance List -->
+                                        <div class="col-lg-8">
+                                            <div class="card border shadow-sm">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h5 class="card-title mb-0">Attendance Tracker</h5>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                                                                data-target="#walkInModal">
+                                                                <i class="mdi mdi-account-plus"></i> Add Walk-in
+                                                            </button>
+                                                            <a href="{{ route('events.print-attendance', $event) }}" target="_blank"
+                                                                class="btn btn-sm btn-primary">
+                                                                <i class="mdi mdi-printer"></i> Print Sheet
+                                                            </a>
+                                                            <button class="btn btn-sm btn-info" onclick="location.reload()">
+                                                                <i class="mdi mdi-refresh"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Date Pills (Synced with Scanner Select) -->
+                                                    <ul class="nav nav-pills mb-4" id="attendance-pills" role="tablist">
+                                                        @foreach($event->dates as $index => $date)
+                                                            <li class="nav-item">
+                                                                <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                                                                    id="pill-day-{{ $date->id }}-tab" data-toggle="pill"
+                                                                    href="#attendance-day-{{ $date->id }}"
+                                                                    data-date-id="{{ $date->id }}" role="tab">
+                                                                    Day {{ $index + 1 }}
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+
+                                                    <div class="tab-content">
+                                                        @foreach($event->dates as $date)
+                                                            <div class="tab-pane {{ $loop->first ? 'active' : '' }}"
+                                                                id="attendance-day-{{ $date->id }}" role="tabpanel">
+                                                                <div class="table-responsive">
+                                                                    <table
+                                                                        class="table table-hover table-striped table-bordered datatable-attendance no-wrap"
+                                                                        id="attendance-table-{{ $date->id }}">
+                                                                        <thead class="bg-light">
+                                                                            <tr>
+                                                                                <th class="border-top-0">Participant</th>
+                                                                                <th class="border-top-0">Organization</th>
+                                                                                <th class="border-top-0">Status</th>
+                                                                                <th class="border-top-0">Time</th>
+                                                                                <th class="border-top-0 text-center">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach($event->participants as $participant)
+                                                                                @php
+                                                                                    $att = $participant->attendances->where('event_date_id', $date->id)->first();
+                                                                                @endphp
+                                                                                <tr id="row-{{ $date->id }}-{{ $participant->uuid }}">
+                                                                                    <td>
+                                                                                        <span
+                                                                                            class="font-weight-bold">{{ $participant->name }}</span>
+                                                                                    </td>
+                                                                                    <td><small>{{ Str::limit($participant->organization, 20) }}</small>
+                                                                                    </td>
+                                                                                    <td class="status-cell">
+                                                                                        @if($att)
+                                                                                            <span class="badge badge-success">Present</span>
+                                                                                        @else
+                                                                                            <span class="badge badge-secondary">Not
+                                                                                                Scanned</span>
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td class="time-cell small">
+                                                                                        {{ $att ? $att->scanned_at->format('h:i A') : '-' }}
+                                                                                    </td>
+                                                                                    <td class="text-center">
+                                                                                        @if(!$att)
+                                                                                            <button
+                                                                                                class="btn btn-xs btn-info shadow-sm mark-manual"
+                                                                                                data-participant-id="{{ $participant->uuid }}"
+                                                                                                data-date-id="{{ $date->id }}">
+                                                                                                <i class="mdi mdi-check"></i> Mark
+                                                                                            </button>
+                                                                                        @else
+                                                                                            <span class="text-success pulse-small"><i
+                                                                                                    class="mdi mdi-check-circle mdi-18px"></i></span>
+                                                                                        @endif
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endcan
                         </div>
-                        @endcan
-                    </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Walk-in Participant Modal -->
+    @can('manageAttendance', $event)
+        <div class="modal fade" id="walkInModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title"><i class="mdi mdi-account-plus mr-1"></i> Add Walk-in Participant</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="walkInForm" action="{{ route('events.walk-in', $event) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">First Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="first_name" required
+                                            placeholder="First Name">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="last_name" required
+                                            placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Organization</label>
+                                        <input type="text" class="form-control" name="organization"
+                                            placeholder="Company/School/Agency">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Designation/Position</label>
+                                        <input type="text" class="form-control" name="designation"
+                                            placeholder="Job Title or Position">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Sex</label>
+                                        <select class="form-control" name="sex">
+                                            <option value="">-- Select --</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Age Bracket</label>
+                                        <select class="form-control" name="age_bracket">
+                                            <option value="">-- Select --</option>
+                                            <option value="Below 18">Below 18</option>
+                                            <option value="18-24">18-24</option>
+                                            <option value="25-34">25-34</option>
+                                            <option value="35-44">35-44</option>
+                                            <option value="45-54">45-54</option>
+                                            <option value="55-64">55-64</option>
+                                            <option value="65 and above">65 and above</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Province</label>
+                                        <select class="form-control" name="province">
+                                            <option value="">-- Select --</option>
+                                            <option value="Aklan">Aklan</option>
+                                            <option value="Antique">Antique</option>
+                                            <option value="Capiz">Capiz</option>
+                                            <option value="Guimaras">Guimaras</option>
+                                            <option value="Iloilo">Iloilo</option>
+                                            <option value="Negros Occidental">Negros Occidental</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Client Type</label>
+                                        <select class="form-control" name="client_type">
+                                            <option value="">-- Select --</option>
+                                            <option value="Citizen">Citizen</option>
+                                            <option value="Business">Business</option>
+                                            <option value="Government">Government (Employee or another agency)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Contact No.</label>
+                                        <input type="text" class="form-control" name="contact_no"
+                                            placeholder="Mobile/Phone Number">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">Email Address</label>
+                                        <input type="email" class="form-control" name="email" placeholder="email@example.com">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Session Date <span class="text-danger">*</span></label>
+                                <select class="form-control" name="event_date_id" required>
+                                    @foreach($event->dates as $date)
+                                        <option value="{{ $date->id }}" {{ $date->date->isToday() ? 'selected' : '' }}>
+                                            Day {{ $loop->iteration }}: {{ $date->date->format('F d, Y') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" id="walkInSubmitBtn">
+                                <i class="mdi mdi-check"></i> Add & Mark Present
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 @endsection
 
 @push('scripts')
@@ -530,6 +777,36 @@
             copyText.setSelectionRange(0, 99999);
             document.execCommand("copy");
             alert("Registration link copied to clipboard!");
+        }
+
+        function copyAttendLink() {
+            var copyText = document.getElementById("attendLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Attendance link copied to clipboard!");
+        }
+
+        async function downloadAttendQR() {
+            const img = document.getElementById('attendQrImg');
+            const url = img.src;
+            const fileName = 'Attendance_QR_{{ Str::slug($event->title) }}.png';
+
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                console.error('Download failed:', error);
+                window.open(url, '_blank');
+            }
         }
 
         async function downloadQR() {
@@ -561,7 +838,7 @@
 
             function initializeDataTable() {
                 if (!$('#participants-table').length) return;
-                
+
                 table = $('#participants-table').DataTable({
                     "destroy": true,
                     "order": [[0, "asc"]],
@@ -578,7 +855,7 @@
             }
 
             function initializeAttendanceTables() {
-                $('.datatable-attendance').each(function() {
+                $('.datatable-attendance').each(function () {
                     let id = $(this).attr('id');
                     attendanceTables[id] = $(this).DataTable({
                         "pageLength": 10,
@@ -609,25 +886,25 @@
                 }
             });
 
-            $('#refresh-list').on('click', function() {
+            $('#refresh-list').on('click', function () {
                 location.reload(); // Simplest way to refresh all counts and relationships
             });
 
             // Adjust table columns when switching tabs
             $('a[data-toggle="tab"], a[data-toggle="pill"]').on('shown.bs.tab shown.bs.pill', function (e) {
                 if (table) table.columns.adjust();
-                $.each(attendanceTables, function(id, tableInstance) {
+                $.each(attendanceTables, function (id, tableInstance) {
                     tableInstance.columns.adjust();
                 });
             });
 
             // Sync Scanner Session Dropdown with Attendance Day Pills
-            $('#scanner-date-id').on('change', function() {
+            $('#scanner-date-id').on('change', function () {
                 let dateId = $(this).val();
                 $(`#pill-day-${dateId}-tab`).tab('show');
             });
 
-            $('#attendance-pills a').on('shown.bs.tab', function(e) {
+            $('#attendance-pills a').on('shown.bs.tab', function (e) {
                 let dateId = $(e.target).data('date-id');
                 $('#scanner-date-id').val(dateId);
                 // Adjust DataTables columns
@@ -637,7 +914,7 @@
             });
 
             // Re-adjust columns when Check-in Station tab is shown
-            $('a[href="#checkin-station"]').on('shown.bs.tab', function() {
+            $('a[href="#checkin-station"]').on('shown.bs.tab', function () {
                 let activeDateId = $('#scanner-date-id').val();
                 if (attendanceTables[`attendance-table-${activeDateId}`]) {
                     attendanceTables[`attendance-table-${activeDateId}`].columns.adjust();
@@ -659,11 +936,11 @@
             }
 
             // Manual Mark Attendance
-            $(document).on('click', '.mark-manual', function() {
+            $(document).on('click', '.mark-manual', function () {
                 let btn = $(this);
                 let participantUuid = btn.data('participant-id');
                 let dateId = btn.data('date-id');
-                
+
                 btn.prop('disabled', true).html('<i class="mdi mdi-loading mdi-spin"></i>');
 
                 $.ajax({
@@ -671,7 +948,7 @@
                     type: 'GET',
                     data: { event_date_id: dateId },
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status === 'success' || response.status === 'info') {
                             updateAttendanceRow(dateId, participantUuid);
                         } else {
@@ -679,7 +956,7 @@
                             alert(response.message);
                         }
                     },
-                    error: function() {
+                    error: function () {
                         btn.prop('disabled', false).text('Mark');
                         alert('Failed to mark attendance.');
                     }
@@ -703,11 +980,11 @@
                 if (!decodedText.includes('mark-attendance')) return;
 
                 stopScanner();
-                
+
                 try {
                     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-                    audio.play().catch(e => {});
-                } catch(e) {}
+                    audio.play().catch(e => { });
+                } catch (e) { }
 
                 // Get selected date from dropdown
                 let selectedDateId = $('#scanner-date-id').val();
@@ -717,13 +994,13 @@
                     type: 'GET',
                     data: { event_date_id: selectedDateId },
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function(response) {
+                    success: function (response) {
                         logResult(response.status, response.message, response.participant);
                         if (response.status === 'success' || response.status === 'info') {
                             updateAttendanceRow(selectedDateId, response.participant.uuid);
                         }
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let msg = 'Error processing QR code.';
                         if (xhr.status === 400) {
                             let resp = JSON.parse(xhr.responseText);
@@ -731,7 +1008,7 @@
                         }
                         logResult('danger', msg);
                     },
-                    complete: function() {
+                    complete: function () {
                         setTimeout(startScanner, 2000);
                     }
                 });
@@ -740,27 +1017,27 @@
             function logResult(status, message, participant = null) {
                 const badgeClass = status === 'success' ? 'badge-success' : (status === 'info' ? 'badge-info' : 'badge-danger');
                 const icon = status === 'success' ? 'mdi-check-circle' : (status === 'info' ? 'mdi-information' : 'mdi-alert-circle');
-                
+
                 if (resultsLog.querySelector('.text-muted')) {
                     resultsLog.innerHTML = '';
                 }
 
                 const resultHtml = `
-                    <div class="alert alert-light border shadow-sm mb-2 p-3 fade show animated bounceInDown">
-                        <div class="d-flex align-items-center">
-                            <div class="mr-3">
-                                <i class="mdi ${icon} text-${status === 'danger' ? 'danger' : (status === 'success' ? 'success' : 'info')}" style="font-size: 24px;"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-1 font-weight-bold">${message}</h6>
-                                <p class="mb-0 small text-muted">${new Date().toLocaleTimeString()}</p>
-                            </div>
-                            <div class="ml-auto">
-                                <span class="badge ${badgeClass}">${status.toUpperCase()}</span>
+                        <div class="alert alert-light border shadow-sm mb-2 p-3 fade show animated bounceInDown">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="mdi ${icon} text-${status === 'danger' ? 'danger' : (status === 'success' ? 'success' : 'info')}" style="font-size: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 font-weight-bold">${message}</h6>
+                                    <p class="mb-0 small text-muted">${new Date().toLocaleTimeString()}</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="badge ${badgeClass}">${status.toUpperCase()}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
                 resultsLog.insertAdjacentHTML('afterbegin', resultHtml);
             }
 

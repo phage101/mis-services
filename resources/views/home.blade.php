@@ -193,8 +193,8 @@
                                 <h4>Event Center</h4>
                                 <p>Explore upcoming workshops and register online.</p>
                                 <div class="mt-4">
-                                    <a href="{{ route('events.index') }}"
-                                        class="btn btn-block btn-lg btn-warning">Access Service</a>
+                                    <a href="{{ route('events.public.index') }}"
+                                        class="btn btn-block btn-lg btn-warning text-white">Access Service</a>
                                 </div>
                             </div>
                         </div>

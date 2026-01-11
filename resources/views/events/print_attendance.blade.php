@@ -257,7 +257,8 @@
                     @foreach($currentPageParticipants as $index => $participant)
                         <tr>
                             <td class="text-center">{{ $start + $index + 1 }}</td>
-                            <td>{{ $participant->name }}</td>
+                            <td style="text-transform: uppercase;">{{ $participant->last_name }}, {{ $participant->first_name }}
+                            </td>
                             <td class="text-center">{{ strtolower($participant->sex) == 'female' ? '/' : '' }}</td>
                             <td class="text-center">{{ strtolower($participant->sex) == 'male' ? '/' : '' }}</td>
                             <td>{{ $participant->organization }}</td>

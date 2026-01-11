@@ -43,6 +43,32 @@ class EventParticipant extends Model
         return $this->hasMany(EventAttendance::class, 'event_participant_id');
     }
 
+    public function getLastNameAttribute($value)
+    {
+        if (!empty($value))
+            return $value;
+
+        // Fallback: try to extract from full name
+        $parts = explode(' ', $this->name ?? '');
+        return count($parts) > 1 ? array_pop($parts) : ($this->name ?? ''); // Determine if single name is last or first? Usually last name is at end.
+    }
+
+    public function getFirstNameAttribute($value)
+    {
+        if (!empty($value))
+            return $value;
+
+        // Fallback
+        $parts = explode(' ', $this->name ?? '');
+        if (count($parts) > 1) {
+            array_pop($parts);
+            return implode(' ', $parts);
+        }
+        return ''; // If only one name, treat as Last Name? Or First? Let's assume Last Name takes precedence for sorting?
+        // Actually, if name is "John", last_name="John", first_name="" effectively?
+        // Or if name="John", last_name="", first_name="John"?
+    }
+
     protected static function boot()
     {
         parent::boot();

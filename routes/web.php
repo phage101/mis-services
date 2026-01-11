@@ -58,12 +58,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('events', \App\Http\Controllers\EventController::class);
     Route::post('events/{event}/attendance', [\App\Http\Controllers\EventController::class, 'updateAttendance'])->name('events.attendance.update');
     Route::get('events/{event}/mark-attendance/{participant_uuid}', [\App\Http\Controllers\EventController::class, 'markAttendance'])->name('events.attendance.mark');
+    Route::post('events/{event}/walk-in', [\App\Http\Controllers\EventController::class, 'addWalkIn'])->name('events.walk-in');
     Route::get('events/{event}/print-attendance', [\App\Http\Controllers\EventController::class, 'printAttendance'])->name('events.print-attendance');
 });
 
 // Public Event Registration
 Route::get('events/{event}/register', [\App\Http\Controllers\EventController::class, 'registrationPage'])->name('events.register');
 Route::post('events/{event}/register', [\App\Http\Controllers\EventController::class, 'register'])->name('events.register.submit')->middleware('throttle:5,1');
+
+// Public Event Attendance (for Attendance-Only events)
+Route::get('events/{event}/attend', [\App\Http\Controllers\EventController::class, 'attendancePage'])->name('events.attend');
+Route::post('events/{event}/attend', [\App\Http\Controllers\EventController::class, 'submitAttendance'])->name('events.attend.submit')->middleware('throttle:10,1');
+
+// Public Event Listing
+Route::get('public-events', [\App\Http\Controllers\EventController::class, 'publicIndex'])->name('events.public.index');
 
 // Public Service Desk
 Route::get('service-desk', [\App\Http\Controllers\PublicTicketController::class, 'index'])->name('public.tickets.create');

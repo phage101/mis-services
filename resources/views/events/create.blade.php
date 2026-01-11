@@ -76,13 +76,24 @@
                                 <div class="form-group mt-4">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="enable_qr" name="enable_qr"
-                                            value="1" checked>
+                                            value="1">
                                         <label class="custom-control-label font-weight-bold" for="enable_qr">
                                             <i class="mdi mdi-qrcode mr-1"></i> Enable QR Code & Email Sending
                                         </label>
                                     </div>
                                     <small class="text-muted d-block mt-1 pl-4">Sends confirmation email with QR code upon
                                         registration.</small>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="disable_registration"
+                                            name="disable_registration" value="1">
+                                        <label class="custom-control-label font-weight-bold" for="disable_registration">
+                                            <i class="mdi mdi-account-off mr-1"></i> Attendance Only (No Registration)
+                                        </label>
+                                    </div>
+                                    <small class="text-muted d-block mt-1 pl-4">Disables public registration. Only walk-in
+                                        attendance tracking.</small>
                                 </div>
                             </div>
                         </div>
@@ -220,30 +231,30 @@
 
             $('#add-date').click(function () {
                 let html = `
-                                    <div class="date-row mb-3 p-3 bg-light rounded border position-relative">
-                                        <button type="button" class="btn btn-sm btn-danger position-absolute remove-date-btn" style="top:-10px; right:-10px;">&times;</button>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group mb-0">
-                                                    <label class="small font-weight-bold">Date</label>
-                                                    <input type="date" name="dates[${dateIndex}][date]" class="form-control" required>
+                                            <div class="date-row mb-3 p-3 bg-light rounded border position-relative">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute remove-date-btn" style="top:-10px; right:-10px;">&times;</button>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mb-0">
+                                                            <label class="small font-weight-bold">Date</label>
+                                                            <input type="date" name="dates[${dateIndex}][date]" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mb-0">
+                                                            <label class="small font-weight-bold">Start Time</label>
+                                                            <input type="time" name="dates[${dateIndex}][start_time]" class="form-control" value="08:00" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mb-0">
+                                                            <label class="small font-weight-bold">End Time</label>
+                                                            <input type="time" name="dates[${dateIndex}][end_time]" class="form-control" value="17:00" required>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group mb-0">
-                                                    <label class="small font-weight-bold">Start Time</label>
-                                                    <input type="time" name="dates[${dateIndex}][start_time]" class="form-control" value="08:00" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group mb-0">
-                                                    <label class="small font-weight-bold">End Time</label>
-                                                    <input type="time" name="dates[${dateIndex}][end_time]" class="form-control" value="17:00" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
+                                        `;
                 $('#dates-container').append(html);
                 dateIndex++;
             });
@@ -254,36 +265,36 @@
 
             function addField() {
                 let html = `
-                                            <div class="field-row mb-3 p-3 bg-light rounded border position-relative">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute remove-btn" style="top:-10px; right:-10px;">&times;</button>
-                                                <div class="row">
-                                                    <div class="col-md-6 mb-2">
-                                                        <label class="small font-weight-bold">Field Label</label>
-                                                        <input type="text" name="form_fields[${fieldIndex}][label]" class="form-control" placeholder="e.g. Food Preference" required>
-                                                    </div>
-                                                    <div class="col-md-3 mb-2">
-                                                        <label class="small font-weight-bold">Field Type</label>
-                                                        <select name="form_fields[${fieldIndex}][field_type]" class="form-control field-type-select">
-                                                            <option value="text">Short Answer (Text)</option>
-                                                            <option value="textarea">Long Answer (Paragraph)</option>
-                                                            <option value="select">Dropdown</option>
-                                                            <option value="radio">Multiple Choice (Radio)</option>
-                                                            <option value="checkbox">Checkboxes</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-3 mb-2 d-flex align-items-center justify-content-center">
-                                                        <div class="form-check pt-3">
-                                                            <input class="form-check-input" type="checkbox" name="form_fields[${fieldIndex}][is_required]" id="req_${fieldIndex}" value="1">
-                                                            <label class="form-check-label" for="req_${fieldIndex}">Required?</label>
+                                                    <div class="field-row mb-3 p-3 bg-light rounded border position-relative">
+                                                        <button type="button" class="btn btn-sm btn-danger position-absolute remove-btn" style="top:-10px; right:-10px;">&times;</button>
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="small font-weight-bold">Field Label</label>
+                                                                <input type="text" name="form_fields[${fieldIndex}][label]" class="form-control" placeholder="e.g. Food Preference" required>
+                                                            </div>
+                                                            <div class="col-md-3 mb-2">
+                                                                <label class="small font-weight-bold">Field Type</label>
+                                                                <select name="form_fields[${fieldIndex}][field_type]" class="form-control field-type-select">
+                                                                    <option value="text">Short Answer (Text)</option>
+                                                                    <option value="textarea">Long Answer (Paragraph)</option>
+                                                                    <option value="select">Dropdown</option>
+                                                                    <option value="radio">Multiple Choice (Radio)</option>
+                                                                    <option value="checkbox">Checkboxes</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-3 mb-2 d-flex align-items-center justify-content-center">
+                                                                <div class="form-check pt-3">
+                                                                    <input class="form-check-input" type="checkbox" name="form_fields[${fieldIndex}][is_required]" id="req_${fieldIndex}" value="1">
+                                                                    <label class="form-check-label" for="req_${fieldIndex}">Required?</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 options-container d-none">
+                                                                <label class="small font-weight-bold">Options (Comma separated)</label>
+                                                                <input type="text" name="form_fields[${fieldIndex}][options]" class="form-control" placeholder="Option 1, Option 2, Option 3">
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 options-container d-none">
-                                                        <label class="small font-weight-bold">Options (Comma separated)</label>
-                                                        <input type="text" name="form_fields[${fieldIndex}][options]" class="form-control" placeholder="Option 1, Option 2, Option 3">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `;
+                                                `;
                 $('#fields-container').append(html);
                 fieldIndex++;
             }
@@ -302,6 +313,15 @@
 
             $(document).on('click', '.remove-btn', function () {
                 $(this).closest('.field-row').remove();
+            });
+
+            // Attendance Only checkbox logic
+            $('#disable_registration').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#enable_qr').prop('checked', false).prop('disabled', true);
+                } else {
+                    $('#enable_qr').prop('disabled', false);
+                }
             });
 
             // Add one field by default if empty

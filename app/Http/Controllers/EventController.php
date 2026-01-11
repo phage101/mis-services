@@ -90,6 +90,7 @@ class EventController extends Controller
             'expected_participants' => $request->expected_participants ?? 0,
             'registration_fields' => $request->registration_fields ?? [],
             'enable_qr' => $request->boolean('enable_qr'),
+            'disable_registration' => $request->boolean('disable_registration'),
             'organizer_id' => Auth::id(),
             'banner_image' => $request->hasFile('banner_image')
                 ? $request->file('banner_image')->store('event-banners', 'public')
@@ -219,6 +220,7 @@ class EventController extends Controller
             'expected_participants' => $request->expected_participants ?? 0,
             'registration_fields' => $request->registration_fields ?? [],
             'enable_qr' => $request->boolean('enable_qr'),
+            'disable_registration' => $request->boolean('disable_registration'),
         ]);
 
         if ($request->hasFile('banner_image')) {
@@ -274,6 +276,9 @@ class EventController extends Controller
     {
         if ($event->status === 'cancelled') {
             abort(403, 'This event registration is closed.');
+        }
+        if ($event->disable_registration) {
+            abort(403, 'Online registration is not available for this event. Please attend in person.');
         }
         $event->load('formFields');
         return view('events.register', compact('event'));
@@ -460,6 +465,67 @@ class EventController extends Controller
     }
 
     /**
+     * Add a walk-in participant and mark them present.
+     */
+    public function addWalkIn(Request $request, Event $event)
+    {
+        $this->authorize('manageAttendance', $event);
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'organization' => 'nullable|string|max:255',
+            'designation' => 'nullable|string|max:255',
+            'sex' => 'nullable|string',
+            'age_bracket' => 'nullable|string',
+            'province' => 'nullable|string|max:255',
+            'client_type' => 'nullable|string',
+            'contact_no' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'event_date_id' => 'required|exists:event_dates,id',
+        ]);
+
+        $province = $request->province;
+        if ($province == 'Others') {
+            $province = '';
+        }
+
+        // Create the walk-in participant
+        $participant = $event->participants()->create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'name' => trim($request->first_name . ' ' . $request->last_name),
+            'organization' => $request->organization,
+            'designation' => $request->designation,
+            'sex' => $request->sex,
+            'age_bracket' => $request->age_bracket,
+            'province' => $province,
+            'client_type' => $request->client_type,
+            'contact_no' => $request->contact_no,
+            'email' => $request->email,
+            'attendance_status' => 'present',
+            'type' => 'external',
+        ]);
+
+        // Mark attendance for the selected date
+        $participant->attendances()->create([
+            'event_date_id' => $request->event_date_id,
+            'status' => 'present',
+            'scanned_at' => now(),
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Walk-in participant added: ' . $participant->name,
+                'participant' => $participant,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Walk-in participant added successfully.');
+    }
+
+    /**
      * Display simple reports.
      */
     public function reports(Request $request)
@@ -490,7 +556,107 @@ class EventController extends Controller
      */
     public function printAttendance(Event $event)
     {
-        $event->load(['participants', 'dates']);
+        $event->load([
+            'participants' => function ($query) {
+                $query->orderBy('last_name')->orderBy('first_name');
+            },
+            'dates'
+        ]);
         return view('events.print_attendance', compact('event'));
+    }
+
+    /**
+     * Display a listing of public events for external users.
+     */
+    public function publicIndex()
+    {
+        $events = Event::with('dates')
+            ->where('disable_registration', false)
+            ->where('status', '!=', 'cancelled')
+            ->where(function ($query) {
+                // Determine if event is not yet finished (either empty dates, or last date is in future)
+                // Since we auto-update status to 'completed', filtering by status != completed might be cleaner
+                // But let's verify upcoming/ongoing logic
+                $query->where('status', '!=', 'completed')
+                    ->orWhereNull('status');
+            })
+            ->orderBy('start_date')
+            ->get()
+            ->groupBy(function ($event) {
+                return $event->start_date ? $event->start_date->format('F Y') : 'TBA';
+            });
+
+        return view('events.public_index', compact('events'));
+    }
+
+    /**
+     * Public attendance page (for attendance-only events).
+     */
+    public function attendancePage(Event $event)
+    {
+        if (!$event->disable_registration) {
+            return redirect()->route('events.register', $event);
+        }
+        if ($event->status === 'cancelled') {
+            abort(403, 'This event is cancelled.');
+        }
+        $event->load('dates');
+        return view('events.attend', compact('event'));
+    }
+
+    /**
+     * Submit public attendance.
+     */
+    public function submitAttendance(Request $request, Event $event)
+    {
+        if (!$event->disable_registration) {
+            abort(403, 'This event uses registration, not public attendance.');
+        }
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'organization' => 'nullable|string|max:255',
+            'designation' => 'nullable|string|max:255',
+            'sex' => 'nullable|string',
+            'age_bracket' => 'nullable|string',
+            'province' => 'nullable|string|max:255',
+            'client_type' => 'nullable|string',
+            'contact_no' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'event_date_id' => 'required|exists:event_dates,id',
+            'g-recaptcha-response' => ['required', new \App\Rules\Recaptcha],
+        ]);
+
+        $province = $request->province;
+        if ($province == 'Others') {
+            $province = '';
+        }
+
+        // Create participant and mark as present
+        $participant = $event->participants()->create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'name' => trim($request->first_name . ' ' . $request->last_name),
+            'organization' => $request->organization,
+            'designation' => $request->designation,
+            'sex' => $request->sex,
+            'age_bracket' => $request->age_bracket,
+            'province' => $province,
+            'client_type' => $request->client_type,
+            'contact_no' => $request->contact_no,
+            'email' => $request->email,
+            'attendance_status' => 'present',
+            'type' => 'external',
+        ]);
+
+        // Mark attendance for selected date
+        $participant->attendances()->create([
+            'event_date_id' => $request->event_date_id,
+            'status' => 'present',
+            'scanned_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Attendance recorded successfully! Thank you for attending.');
     }
 }
