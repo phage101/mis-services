@@ -34,13 +34,11 @@ class PublicTicketController extends Controller
     {
         $term = $request->get('q');
 
-        // Security Resolve: Require full email for match to prevent data harvesting
-        if (!filter_var($term, FILTER_VALIDATE_EMAIL)) {
-            return response()->json(['results' => []]);
-        }
-
-        $users = User::where('email', $term)
-            ->limit(1)
+        // Allow searching by Name OR Email. 
+        // We limit to 5 results to allow better matching while preventing mass harvesting.
+        $users = User::where('name', 'LIKE', "%{$term}%")
+            ->orWhere('email', 'LIKE', "%{$term}%")
+            ->limit(5)
             ->get(['id', 'name', 'email']);
 
         $results = $users->map(function ($user) {
@@ -109,6 +107,8 @@ class PublicTicketController extends Controller
             'email' => 'required_without:requestor_id|nullable|email|unique:users,email',
             'office_id' => 'required_without:requestor_id|nullable|exists:offices,id',
             'division_id' => 'required_without:requestor_id|nullable|exists:divisions,id',
+            'client_type' => 'required_without:requestor_id|nullable|string',
+            'age_bracket' => 'required_without:requestor_id|nullable|string',
             'request_type_id' => 'required|exists:request_types,id',
             'category_id' => 'required|exists:categories,id',
             'urgency' => 'required|in:low,medium,high,critical',
@@ -128,6 +128,8 @@ class PublicTicketController extends Controller
                 'password' => Hash::make($password),
                 'office_id' => $request->office_id,
                 'division_id' => $request->division_id,
+                'client_type' => $request->client_type,
+                'age_bracket' => $request->age_bracket,
             ]);
 
             $user->assignRole('User'); // Case sensitive match with PermissionSeeder

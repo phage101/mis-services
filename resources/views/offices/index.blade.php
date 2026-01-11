@@ -94,14 +94,14 @@
                                         <td><span class="badge badge-success">{{ $office->users_count }}</span></td>
                                         <td class="text-right" style="white-space:nowrap;">
                                             @can('offices.edit')
-                                                <button class="btn btn-warning btn-sm edit-office" data-id="{{ $office->id }}"
+                                                <button class="btn btn-warning btn-sm edit-office" data-id="{{ $office->uuid }}"
                                                     data-name="{{ $office->name }}" data-code="{{ $office->code }}"
                                                     data-toggle="modal" data-target="#editOfficeModal">
                                                     <i class="mdi mdi-pencil"></i>
                                                 </button>
                                             @endcan
                                             @can('offices.delete')
-                                                <form action="{{ route('offices.destroy', $office->id) }}" method="POST"
+                                                <form action="{{ route('offices.destroy', $office) }}" method="POST"
                                                     style="display:inline;" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')

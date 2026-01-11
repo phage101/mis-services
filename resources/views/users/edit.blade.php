@@ -23,7 +23,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('users.update', $user->id) }}" method="POST">
+                    <form action="{{ route('users.update', $user) }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <div class="form-group">
@@ -45,7 +45,58 @@
                             <label for="confirm-password">Confirm Password (Optional)</label>
                             <input type="password" name="confirm-password" id="confirm-password" class="form-control">
                         </div>
-                        
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="client_type">Client Type</label>
+                                    <select name="client_type" id="client_type" class="form-control" required>
+                                        <option value="">Select Client Type</option>
+                                        <option value="Citizen" {{ old('client_type', $user->client_type) == 'Citizen' ? 'selected' : '' }}>Citizen</option>
+                                        <option value="Business" {{ old('client_type', $user->client_type) == 'Business' ? 'selected' : '' }}>Business</option>
+                                        <option value="Government Employee or other agency" {{ old('client_type', $user->client_type) == 'Government Employee or other agency' ? 'selected' : '' }}>
+                                            Government Employee or other agency</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sex">Sex</label>
+                                    <select name="sex" id="sex" class="form-control" required>
+                                        <option value="">Select Sex</option>
+                                        <option value="Male" {{ old('sex', $user->sex) == 'Male' ? 'selected' : '' }}>Male
+                                        </option>
+                                        <option value="Female" {{ old('sex', $user->sex) == 'Female' ? 'selected' : '' }}>
+                                            Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="age_bracket">Age Bracket</label>
+                                    <select name="age_bracket" id="age_bracket" class="form-control" required>
+                                        <option value="">Select Age Bracket</option>
+                                        <option value="19 or lower" {{ old('age_bracket', $user->age_bracket) == '19 or lower' ? 'selected' : '' }}>19 or lower</option>
+                                        <option value="20–34" {{ old('age_bracket', $user->age_bracket) == '20–34' ? 'selected' : '' }}>20–34</option>
+                                        <option value="35–49" {{ old('age_bracket', $user->age_bracket) == '35–49' ? 'selected' : '' }}>35–49</option>
+                                        <option value="50–64" {{ old('age_bracket', $user->age_bracket) == '50–64' ? 'selected' : '' }}>50–64</option>
+                                        <option value="65 or higher" {{ old('age_bracket', $user->age_bracket) == '65 or higher' ? 'selected' : '' }}>65 or higher</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="contact_no">Contact Number</label>
+                                    <input type="text" name="contact_no" id="contact_no" class="form-control"
+                                        placeholder="Enter contact number"
+                                        value="{{ old('contact_no', $user->contact_no) }}" required>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -93,29 +144,29 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    $('#office_id').change(function() {
-        var officeId = $(this).val();
-        var divisionSelect = $('#division_id');
-        
-        divisionSelect.html('<option value="">Loading...</option>');
-        
-        if (officeId) {
-            $.ajax({
-                url: '{{ route("offices.divisions", ":id") }}'.replace(':id', officeId),
-                type: 'GET',
-                success: function(data) {
-                    divisionSelect.html('<option value="">Select Division</option>');
-                    $.each(data, function(key, value) {
-                        divisionSelect.append('<option value="' + value.id + '">' + value.name + '</option>');
+    <script>
+        $(document).ready(function () {
+            $('#office_id').change(function () {
+                var officeId = $(this).val();
+                var divisionSelect = $('#division_id');
+
+                divisionSelect.html('<option value="">Loading...</option>');
+
+                if (officeId) {
+                    $.ajax({
+                        url: '{{ route("offices.divisions", ":id") }}'.replace(':id', officeId),
+                        type: 'GET',
+                        success: function (data) {
+                            divisionSelect.html('<option value="">Select Division</option>');
+                            $.each(data, function (key, value) {
+                                divisionSelect.append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        }
                     });
+                } else {
+                    divisionSelect.html('<option value="">Select Division</option>');
                 }
             });
-        } else {
-            divisionSelect.html('<option value="">Select Division</option>');
-        }
-    });
-});
-</script>
+        });
+    </script>
 @endpush

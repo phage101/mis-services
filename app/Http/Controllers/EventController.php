@@ -348,6 +348,7 @@ class EventController extends Controller
             'organization' => $request->organization,
             'designation' => $request->designation,
             'age_bracket' => $request->age_bracket,
+            'client_type' => $request->client_type,
             'sex' => $request->sex,
             'province' => $province,
             'contact_no' => $request->contact_no,

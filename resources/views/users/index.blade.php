@@ -98,15 +98,15 @@
                                         </td>
                                         <td class="text-right" style="white-space:nowrap;">
                                             @can('users.list')
-                                                <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}"><i
+                                                <a class="btn btn-info btn-sm" href="{{ route('users.show', $user) }}"><i
                                                         class="mdi mdi-eye"></i></a>
                                             @endcan
                                             @can('users.edit')
-                                                <a class="btn btn-warning btn-sm" href="{{ route('users.edit', $user->id) }}"><i
+                                                <a class="btn btn-warning btn-sm" href="{{ route('users.edit', $user) }}"><i
                                                         class="mdi mdi-pencil"></i></a>
                                             @endcan
                                             @can('users.delete')
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                <form action="{{ route('users.destroy', $user) }}" method="POST"
                                                     style="display:inline" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')

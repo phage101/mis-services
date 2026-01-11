@@ -133,6 +133,16 @@
                         @endcan
 
                         <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span
+                                class="hide-menu">Reports</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                href="{{ route('reports.csf.index') }}" aria-expanded="false">
+                                <i class="mdi mdi-chart-bar"></i>
+                                <span class="hide-menu">CSF Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span
                                 class="hide-menu">Administration</span></li>
                         @can('users.list')
                             <li class="sidebar-item">

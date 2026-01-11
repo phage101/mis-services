@@ -60,8 +60,15 @@
         }
 
         .portal-header {
-            padding: 60px 0 30px;
+            padding: 40px;
             text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            /* 10% opacity */
+            border-radius: 15px;
+            max-width: 900px;
+            margin: 40px auto;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .portal-header h1 {

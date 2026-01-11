@@ -79,6 +79,11 @@ class Ticket extends Model
         return $this->hasMany(TicketResponse::class)->orderBy('created_at', 'desc');
     }
 
+    public function feedback(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ClientSatisfactionFeedback::class);
+    }
+
     /**
      * Boot method to handle status changes
      */

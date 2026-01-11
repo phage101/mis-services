@@ -63,9 +63,38 @@ Your ticket **{{ $ticket->request_number ?? '#' . $ticket->id }}** has been upda
     @endif
 </table>
 
-@component('mail::button', ['url' => route('tickets.show', $ticket->uuid)])
-View Ticket
-@endcomponent
+<br>
+
+<table class="action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <tr>
+        <td align="center">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                                <td style="padding: 10px;">
+                                    <a href="{{ route('public.tickets.track', ['search' => $ticket->request_number]) }}"
+                                        class="button button-primary" target="_blank" rel="noopener"
+                                        style="display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #3490dc; border-radius: 4px; text-decoration: none;">View
+                                        Ticket</a>
+                                </td>
+                                @if($ticket->status == 'completed')
+                                    <td style="padding: 10px;">
+                                        <a href="{{ route('csf.create', $ticket->uuid) }}" class="button button-success"
+                                            target="_blank" rel="noopener"
+                                            style="display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #38c172; border-radius: 4px; text-decoration: none;">Give
+                                            Feedback</a>
+                                    </td>
+                                @endif
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 
 Thanks,<br>
 {{ config('app.name') }}

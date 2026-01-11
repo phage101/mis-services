@@ -94,7 +94,7 @@
                                         <td><span class="badge badge-success">{{ $division->users_count }}</span></td>
                                         <td class="text-right" style="white-space:nowrap;">
                                             @can('divisions.edit')
-                                                <button class="btn btn-warning btn-sm edit-division" data-id="{{ $division->id }}"
+                                                <button class="btn btn-warning btn-sm edit-division" data-id="{{ $division->uuid }}"
                                                     data-name="{{ $division->name }}" data-code="{{ $division->code }}"
                                                     data-office-id="{{ $division->office_id }}" data-toggle="modal"
                                                     data-target="#editDivisionModal">
@@ -102,7 +102,7 @@
                                                 </button>
                                             @endcan
                                             @can('divisions.delete')
-                                                <form action="{{ route('divisions.destroy', $division->id) }}" method="POST"
+                                                <form action="{{ route('divisions.destroy', $division) }}" method="POST"
                                                     style="display:inline;" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')

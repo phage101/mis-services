@@ -35,10 +35,18 @@ class ProfileController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
+            'client_type' => 'nullable|string',
+            'sex' => 'nullable|string',
+            'age_bracket' => 'nullable|string',
+            'contact_no' => 'nullable|string',
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->client_type = $request->client_type;
+        $user->sex = $request->sex;
+        $user->age_bracket = $request->age_bracket;
+        $user->contact_no = $request->contact_no;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);

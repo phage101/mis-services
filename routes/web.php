@@ -20,6 +20,12 @@ Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('h
 Route::middleware(['guest', 'throttle:10,1'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    // Password Reset Routes
+    Route::get('password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
@@ -71,3 +77,14 @@ Route::get('meeting-request/track', [\App\Http\Controllers\PublicMeetingControll
 Route::get('api/public/users/search', [\App\Http\Controllers\PublicTicketController::class, 'searchUser'])->name('api.public.users.search')->middleware('throttle:20,1');
 Route::get('api/public/request-types/{type}/categories', [\App\Http\Controllers\PublicTicketController::class, 'getCategories'])->name('api.public.categories');
 Route::get('api/public/offices/{office}/divisions', [\App\Http\Controllers\PublicTicketController::class, 'getDivisions'])->name('api.public.divisions');
+
+// Client Satisfaction Feedback
+Route::get('feedback/{ticket}', [\App\Http\Controllers\ClientSatisfactionFeedbackController::class, 'create'])->name('csf.create');
+Route::post('feedback/{ticket}', [\App\Http\Controllers\ClientSatisfactionFeedbackController::class, 'store'])->name('csf.store')->middleware('throttle:5,1');
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('reports/csf')->name('reports.csf.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\CsfReportController::class, 'index'])->name('index');
+        Route::patch('{id}/sign', [\App\Http\Controllers\CsfReportController::class, 'sign'])->name('sign');
+    });
+});

@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+use App\Traits\HasUuid;
+
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +25,10 @@ class User extends Authenticatable
         'password',
         'office_id',
         'division_id',
+        'client_type',
+        'age_bracket',
+        'sex',
+        'contact_no',
     ];
 
     /**

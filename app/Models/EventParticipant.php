@@ -26,6 +26,7 @@ class EventParticipant extends Model
         'organization_msme',
         'attendance_status',
         'additional_data',
+        'client_type',
     ];
 
     protected $casts = [

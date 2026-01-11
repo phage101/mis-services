@@ -56,15 +56,15 @@
                                         <td>{{ $role->name }}</td>
                                         <td class="text-right" style="white-space:nowrap;">
                                             @can('roles.list')
-                                                <a class="btn btn-info btn-sm" href="{{ route('roles.show', $role->id) }}"><i
+                                                <a class="btn btn-info btn-sm" href="{{ route('roles.show', $role) }}"><i
                                                         class="mdi mdi-eye"></i></a>
                                             @endcan
                                             @can('roles.edit')
-                                                <a class="btn btn-warning btn-sm" href="{{ route('roles.edit', $role->id) }}"><i
+                                                <a class="btn btn-warning btn-sm" href="{{ route('roles.edit', $role) }}"><i
                                                         class="mdi mdi-pencil"></i></a>
                                             @endcan
                                             @can('roles.delete')
-                                                <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                                <form action="{{ route('roles.destroy', $role) }}" method="POST"
                                                     style="display:inline" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')

@@ -332,18 +332,24 @@
                                     <label class="font-weight-bold">Age Bracket <span class="text-danger">*</span></label>
                                     <select name="age_bracket" class="form-control" required>
                                         <option value="">Select age bracket</option>
-                                        <option value="Below 18" {{ old('age_bracket') == 'Below 18' ? 'selected' : '' }}>Below 18
-                                        </option>
-                                        <option value="18-24" {{ old('age_bracket') == '18-24' ? 'selected' : '' }}>18-24</option>
-                                        <option value="25-34" {{ old('age_bracket') == '25-34' ? 'selected' : '' }}>25-34</option>
-                                        <option value="35-44" {{ old('age_bracket') == '35-44' ? 'selected' : '' }}>35-44</option>
-                                        <option value="45-54" {{ old('age_bracket') == '45-54' ? 'selected' : '' }}>45-54</option>
-                                        <option value="55-64" {{ old('age_bracket') == '55-64' ? 'selected' : '' }}>55-64</option>
-                                        <option value="65 and above" {{ old('age_bracket') == '65 and above' ? 'selected' : '' }}>
-                                            65 and above</option>
+                                        <option value="19 or lower" {{ old('age_bracket') == '19 or lower' ? 'selected' : '' }}>19 or lower</option>
+                                        <option value="20–34" {{ old('age_bracket') == '20–34' ? 'selected' : '' }}>20–34</option>
+                                        <option value="35–49" {{ old('age_bracket') == '35–49' ? 'selected' : '' }}>35–49</option>
+                                        <option value="50–64" {{ old('age_bracket') == '50–64' ? 'selected' : '' }}>50–64</option>
+                                        <option value="65 or higher" {{ old('age_bracket') == '65 or higher' ? 'selected' : '' }}>65 or higher</option>
                                     </select>
                                 </div>
                             @endif
+
+                            <div class="col-md-6 mb-4 text-left">
+                                <label class="font-weight-bold">Client Type <span class="text-danger">*</span></label>
+                                <select name="client_type" class="form-control" required>
+                                    <option value="">Select client type</option>
+                                    <option value="Citizen" {{ old('client_type') == 'Citizen' ? 'selected' : '' }}>Citizen</option>
+                                    <option value="Business" {{ old('client_type') == 'Business' ? 'selected' : '' }}>Business</option>
+                                    <option value="Government Employee or other agency" {{ old('client_type') == 'Government Employee or other agency' ? 'selected' : '' }}>Government Employee or other agency</option>
+                                </select>
+                            </div>
 
                             @foreach($event->formFields as $field)
                                 <div class="col-md-12 mb-4 text-left">

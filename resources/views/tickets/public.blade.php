@@ -161,6 +161,29 @@
                                         <option value="">Select Division</option>
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold">Client Type <span
+                                            class="text-danger">*</span></label>
+                                    <select name="client_type" id="client_type" class="form-control">
+                                        <option value="">Select Client Type</option>
+                                        <option value="Citizen">Citizen</option>
+                                        <option value="Business">Business</option>
+                                        <option value="Government Employee or other agency">Government Employee or other
+                                            agency</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold">Age Bracket <span
+                                            class="text-danger">*</span></label>
+                                    <select name="age_bracket" id="age_bracket" class="form-control">
+                                        <option value="">Select Age Bracket</option>
+                                        <option value="19 or lower">19 or lower</option>
+                                        <option value="20–34">20–34</option>
+                                        <option value="35–49">35–49</option>
+                                        <option value="50–64">50–64</option>
+                                        <option value="65 or higher">65 or higher</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 

@@ -31,6 +31,14 @@
                             <label class="font-weight-bold text-dark">Division:</label>
                             <p class="form-control-plaintext border-bottom">{{ $user->division->name ?? 'N/A' }}</p>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Client Type:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->client_type ?? 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold text-dark">Age Bracket:</label>
+                            <p class="form-control-plaintext border-bottom">{{ $user->age_bracket ?? 'N/A' }}</p>
+                        </div>
                         <div class="col-md-12 mb-3">
                             <label class="font-weight-bold text-dark">Roles:</label>
                             <div>

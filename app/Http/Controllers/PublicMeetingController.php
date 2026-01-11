@@ -59,6 +59,8 @@ class PublicMeetingController extends Controller
             'email' => 'required_without:requestor_id|nullable|email|unique:users,email',
             'office_id' => 'required_without:requestor_id|nullable|exists:offices,id',
             'division_id' => 'required_without:requestor_id|nullable|exists:divisions,id',
+            'client_type' => 'required_without:requestor_id|nullable|string',
+            'age_bracket' => 'required_without:requestor_id|nullable|string',
             'topic' => 'required|string|max:255',
             'description' => 'nullable|string',
             'slots' => 'required|array|min:1',
@@ -80,6 +82,8 @@ class PublicMeetingController extends Controller
                 'password' => Hash::make($password),
                 'office_id' => $request->office_id,
                 'division_id' => $request->division_id,
+                'client_type' => $request->client_type,
+                'age_bracket' => $request->age_bracket,
             ]);
 
             $user->assignRole('User');

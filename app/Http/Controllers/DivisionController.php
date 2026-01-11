@@ -63,9 +63,9 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Division $division)
     {
-        //
+        return view('divisions.show', compact('division'));
     }
 
     /**
@@ -74,9 +74,10 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Division $division)
     {
-        //
+        $offices = Office::all();
+        return view('divisions.edit', compact('division', 'offices'));
     }
 
     /**
@@ -86,7 +87,7 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Division $division)
     {
         $this->authorize('divisions.edit');
         $request->validate([
@@ -95,7 +96,6 @@ class DivisionController extends Controller
             'office_id' => 'required|exists:offices,id',
         ]);
 
-        $division = Division::findOrFail($id);
         $division->update($request->all());
 
         return redirect()->route('divisions.index')
@@ -108,10 +108,9 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Division $division)
     {
         $this->authorize('divisions.delete');
-        $division = Division::findOrFail($id);
         $division->delete();
 
         return redirect()->route('divisions.index')

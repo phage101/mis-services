@@ -15,9 +15,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:users.list|users.create|users.edit|users.delete', ['only' => ['index', 'show']]);
         $this->middleware('permission:users.create', ['only' => ['create', 'store']]);
@@ -28,7 +28,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -45,7 +45,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -59,7 +59,7 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -70,6 +70,10 @@ class UserController extends Controller
             'roles' => 'required',
             'office_id' => 'required|exists:offices,id',
             'division_id' => 'required|exists:divisions,id',
+            'client_type' => 'nullable|string',
+            'sex' => 'nullable|string',
+            'age_bracket' => 'nullable|string',
+            'contact_no' => 'nullable|string',
         ]);
 
         $input = $request->all();
@@ -85,24 +89,22 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\View\View
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::find($id);
         return view('users.show', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
         $offices = Office::all();
@@ -115,18 +117,22 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'same:confirm-password',
             'roles' => 'required',
             'office_id' => 'required|exists:offices,id',
             'division_id' => 'required|exists:divisions,id',
+            'client_type' => 'nullable|string',
+            'sex' => 'nullable|string',
+            'age_bracket' => 'nullable|string',
+            'contact_no' => 'nullable|string',
         ]);
 
         $input = $request->all();
@@ -136,7 +142,6 @@ class UserController extends Controller
             $input = Arr::except($input, array('password'));
         }
 
-        $user = User::find($id);
         $user->update($input);
         $user->syncRoles($request->input('roles'));
 
@@ -147,12 +152,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::find($id)->delete();
+        $user->delete();
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }

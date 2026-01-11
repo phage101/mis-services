@@ -67,6 +67,54 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-md-12">Contact Number</label>
+                            <div class="col-md-12">
+                                <input type="text" name="contact_no" value="{{ old('contact_no', $user->contact_no) }}"
+                                    class="form-control form-control-line" placeholder="e.g. 09123456789">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12">Client Type</label>
+                            <div class="col-md-12">
+                                <select name="client_type" class="form-control form-control-line">
+                                    <option value="">Select...</option>
+                                    <option value="Citizen" {{ old('client_type', $user->client_type) == 'Citizen' ? 'selected' : '' }}>Citizen</option>
+                                    <option value="Business" {{ old('client_type', $user->client_type) == 'Business' ? 'selected' : '' }}>Business</option>
+                                    <option value="Government Employee or other agency" {{ old('client_type', $user->client_type) == 'Government Employee or other agency' ? 'selected' : '' }}>
+                                        Government Employee or other agency</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12">Sex</label>
+                            <div class="col-md-12">
+                                <select name="sex" class="form-control form-control-line">
+                                    <option value="">Select...</option>
+                                    <option value="Male" {{ old('sex', $user->sex) == 'Male' ? 'selected' : '' }}>Male
+                                    </option>
+                                    <option value="Female" {{ old('sex', $user->sex) == 'Female' ? 'selected' : '' }}>Female
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-12">Age Bracket</label>
+                            <div class="col-md-12">
+                                <select name="age_bracket" class="form-control form-control-line">
+                                    <option value="">Select...</option>
+                                    <option value="19 or lower" {{ old('age_bracket', $user->age_bracket) == '19 or lower' ? 'selected' : '' }}>19 or lower</option>
+                                    <option value="20–34" {{ old('age_bracket', $user->age_bracket) == '20–34' ? 'selected' : '' }}>20–34</option>
+                                    <option value="35–49" {{ old('age_bracket', $user->age_bracket) == '35–49' ? 'selected' : '' }}>35–49</option>
+                                    <option value="50–64" {{ old('age_bracket', $user->age_bracket) == '50–64' ? 'selected' : '' }}>50–64</option>
+                                    <option value="65 or higher" {{ old('age_bracket', $user->age_bracket) == '65 or higher' ? 'selected' : '' }}>65 or higher</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-md-12">New Password (leave blank to keep current)</label>
                             <div class="col-md-12">
                                 <input type="password" name="password" class="form-control form-control-line">

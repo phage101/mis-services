@@ -69,10 +69,16 @@
 
                                 <div class="form-group row">
                                     <div class="col-md-12">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" name="remember" class="custom-control-input"
-                                                id="customCheck1">
-                                            <label class="custom-control-label" for="customCheck1">Remember me</label>
+                                        <div
+                                            class="custom-control custom-checkbox d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <input type="checkbox" name="remember" class="custom-control-input"
+                                                    id="customCheck1">
+                                                <label class="custom-control-label" for="customCheck1">Remember
+                                                    me</label>
+                                            </div>
+                                            <a href="{{ route('password.request') }}" class="text-muted"><i
+                                                    class="fa fa-lock m-r-5"></i> Forgot pwd?</a>
                                         </div>
                                     </div>
                                 </div>

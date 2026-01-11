@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Office;
-use App\Models\Division;
 
 class OfficeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -28,18 +27,18 @@ class OfficeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        //
+        return view('offices.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -58,41 +57,40 @@ class OfficeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Office  $office
+     * @return \Illuminate\View\View
      */
-    public function show($id)
+    public function show(Office $office)
     {
-        //
+        return view('offices.show', compact('office'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Office  $office
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Office $office)
     {
-        //
+        return view('offices.edit', compact('office'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Office  $office
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Office $office)
     {
         $this->authorize('offices.edit');
         $request->validate([
-            'name' => 'required|unique:offices,name,' . $id,
-            'code' => 'nullable|unique:offices,code,' . $id,
+            'name' => 'required|unique:offices,name,' . $office->id,
+            'code' => 'nullable|unique:offices,code,' . $office->id,
         ]);
 
-        $office = Office::findOrFail($id);
         $office->update($request->all());
 
         return redirect()->route('offices.index')
@@ -102,22 +100,21 @@ class OfficeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Office  $office
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Office $office)
     {
         $this->authorize('offices.delete');
-        $office = Office::findOrFail($id);
         $office->delete();
 
         return redirect()->route('offices.index')
             ->with('success', 'Office deleted successfully.');
     }
 
-    public function getDivisions($id)
+    public function getDivisions($officeId)
     {
-        $divisions = Division::where('office_id', $id)->get();
-        return response()->json($divisions);
+        $office = Office::where('id', $officeId)->orWhere('uuid', $officeId)->firstOrFail();
+        return response()->json($office->divisions);
     }
 }
